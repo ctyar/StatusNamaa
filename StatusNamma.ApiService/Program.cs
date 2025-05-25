@@ -39,39 +39,32 @@ public class Program
 
         string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
-        app.MapGet("/weatherforecast", ([FromServices] RequestCountMetric requestCountMetric) =>
+        app.MapGet("/produce", ([FromServices] RequestCountMetric requestCountMetric) =>
         {
-            requestCountMetric.RequestReceived();
+            requestCountMetric.Produce();
 
-            var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-                .ToArray();
-            return forecast;
-        })
-        .WithName("GetWeatherForecast");
+            return "done";
+        });
+        app.MapGet("/consume", ([FromServices] RequestCountMetric requestCountMetric) =>
+        {
+            requestCountMetric.Consume();
+
+            return "done";
+        });
 
         app.MapGet("/statusnamma", () =>
         {
-            var svgDoc = new SvgDocument
-            {
-                Width = 500,
-                Height = 500,
-                ViewBox = new SvgViewBox(-250, -250, 500, 500),
-            };
+            var quality = GetQuality("request.count");
 
+            var svgDoc = new SvgDocument();
             var group = new SvgGroup();
             svgDoc.Children.Add(group);
 
             group.Children.Add(new SvgRectangle
             {
-                Width = 200,
-                Height = 200,
-                Fill = new SvgColourServer(Color.Green),
+                Width = new SvgUnit(SvgUnitType.Em, 5),
+                Height = new SvgUnit(SvgUnitType.Em, 5),
+                Fill = GetColor(quality),
             });
 
             var content = svgDoc.GetXML();
@@ -85,6 +78,51 @@ public class Program
         SetListener();
 
         app.Run();
+    }
+
+    private static SvgColourServer GetColor(double? quality)
+    {
+        if (quality is null)
+        {
+            return new SvgColourServer(Color.White);
+        }
+
+        var color = Blend(Color.Green, Color.Red, quality.Value);
+
+        return new SvgColourServer(color);
+    }
+
+    private static double? GetQuality(string name)
+    {
+        var bestValue = 0;
+        var worstValue = 10;
+
+        if (!Values.TryGetValue(name, out var currentValue))
+        {
+            return null;
+        }
+
+        if (currentValue <= bestValue)
+        {
+            return 0.0;
+        }
+        else if (currentValue >= worstValue)
+        {
+            return 1.0;
+        }
+        else
+        {
+            return (double)(currentValue - bestValue) / (worstValue - bestValue);
+        }
+    }
+
+    public static Color Blend(Color color1, Color color2, double amount)
+    {
+        var r = (byte)(color1.R * (1 - amount) + color2.R * amount);
+        var g = (byte)(color1.G * (1 - amount) + color2.G * amount);
+        var b = (byte)(color1.B * (1 - amount) + color2.B * amount);
+
+        return Color.FromArgb(r, g, b);
     }
 
     private static void SetListener()
@@ -108,7 +146,9 @@ public class Program
     private static void OnMeasurementRecorded(Instrument instrument, int measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        Values[instrument.Name] = measurement;
+        Values.TryGetValue(instrument.Name, out var currentCount);
+        Values[instrument.Name] = currentCount + measurement;
+
         Console.WriteLine($"{instrument.Name} recorded measurement {measurement}");
     }
 }
@@ -122,17 +162,22 @@ public class RequestCountMetric
 {
     public static readonly string Name = "StatusNamma.ApiService";
 
-    private readonly Counter<int> _requestCount;
+    private readonly UpDownCounter<int> _requestCount;
 
     public RequestCountMetric(IMeterFactory meterFactory)
     {
         var meter = meterFactory.Create(Name);
 
-        _requestCount = meter.CreateCounter<int>("request.count");
+        _requestCount = meter.CreateUpDownCounter<int>("request.count");
     }
 
-    public void RequestReceived()
+    public void Produce()
     {
         _requestCount.Add(1);
+    }
+
+    public void Consume()
+    {
+        _requestCount.Add(-1);
     }
 }
