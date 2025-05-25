@@ -5,6 +5,8 @@ namespace StatusNamma.ApiService;
 
 public class Program
 {
+    private static readonly Dictionary<string, int> Values = [];
+
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -52,7 +54,34 @@ public class Program
 
         app.MapDefaultEndpoints();
 
+        SetListener();
+
         app.Run();
+    }
+
+    private static void SetListener()
+    {
+        var meterListener = new MeterListener
+        {
+            InstrumentPublished = (instrument, listener) =>
+            {
+                if (instrument.Meter.Name == RequestCountMetric.Name)
+                {
+                    listener.EnableMeasurementEvents(instrument);
+                }
+            }
+        };
+
+        meterListener.SetMeasurementEventCallback<int>(OnMeasurementRecorded);
+
+        meterListener.Start();
+    }
+
+    private static void OnMeasurementRecorded(Instrument instrument, int measurement,
+        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
+    {
+        Values[instrument.Name] = measurement;
+        Console.WriteLine($"{instrument.Name} recorded measurement {measurement}");
     }
 }
 
