@@ -1,5 +1,8 @@
 using System.Diagnostics.Metrics;
+using System.Drawing;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Svg;
 
 namespace StatusNamma.ApiService;
 
@@ -51,6 +54,31 @@ public class Program
             return forecast;
         })
         .WithName("GetWeatherForecast");
+
+        app.MapGet("/statusnamma", () =>
+        {
+            var svgDoc = new SvgDocument
+            {
+                Width = 500,
+                Height = 500,
+                ViewBox = new SvgViewBox(-250, -250, 500, 500),
+            };
+
+            var group = new SvgGroup();
+            svgDoc.Children.Add(group);
+
+            group.Children.Add(new SvgRectangle
+            {
+                Width = 200,
+                Height = 200,
+                Fill = new SvgColourServer(Color.Green),
+            });
+
+            var content = svgDoc.GetXML();
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(content));
+
+            return Results.File(stream, "image/svg+xml");
+        });
 
         app.MapDefaultEndpoints();
 
