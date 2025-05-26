@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Diagnostics.Metrics;
 
 namespace StatusNamaa.ApiService;
 
@@ -11,14 +10,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.AddServiceDefaults(RequestCountMetric.Name);
+        builder.AddServiceDefaults(RequestCountMetric.MetricName);
 
         builder.Services.AddProblemDetails();
 
         builder.Services.AddOpenApi();
         builder.Services.AddSwaggerUI();
-
-        builder.Services.AddTransient<IMetricsListener, MetricsListener>();
 
         builder.Services.AddSingleton<RequestCountMetric>();
 
@@ -49,22 +46,14 @@ public class Program
 
         app.MapGet("/statusnamma", () =>
         {
-            var stream = SvgService.GetSvg([RequestCountMetric.Name, "process.runtime.dotnet.gc.allocations.size"]);
+            var stream = SvgService.GetSvg([RequestCountMetric.InstrumentName, "process.runtime.dotnet.gc.allocations.size"]);
 
             return Results.File(stream, "image/svg+xml");
         });
 
-        app.MapGet("/lock", () =>
-        {
-            lock (_lock)
-            {
-                Thread.Sleep(10000);
-            }
-
-            return "ok";
-        });
-
         app.MapDefaultEndpoints();
+
+        MetricsService.Init();
 
         app.Run();
     }

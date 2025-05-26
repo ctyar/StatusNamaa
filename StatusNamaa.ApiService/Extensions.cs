@@ -3,6 +3,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using StatusNamaa.ApiService;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -50,7 +51,8 @@ public static class Extensions
             {
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation();
+                    .AddRuntimeInstrumentation()
+                    .AddInMemoryExporter(MetricsService.ExportedMetrics);
 
                 metrics.AddMeter(metricName);
             })

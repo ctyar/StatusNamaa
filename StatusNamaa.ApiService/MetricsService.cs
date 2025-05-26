@@ -1,16 +1,20 @@
-﻿namespace StatusNamaa.ApiService;
+﻿using System.Diagnostics.Metrics;
+using OpenTelemetry.Metrics;
 
-/*public class MetricsService
+namespace StatusNamaa.ApiService;
+
+public class MetricsService
 {
     private static readonly MeterListener MeterListener = new();
     private static readonly Dictionary<string, long> MetricValues = [];
 
-    private static readonly List<Metric> ExportedMetrics = [];
+    public static readonly List<Metric> ExportedMetrics = [];
 
-    static MetricsService()
+    public static void Init()
     {
         MeterListener.InstrumentPublished = (instrument, listener) =>
         {
+            Console.WriteLine(instrument.Name);
             listener.EnableMeasurementEvents(instrument);
         };
 
@@ -18,24 +22,24 @@
         MeterListener.SetMeasurementEventCallback<long>(OnMeasurementRecorded);
 
         MeterListener.Start();
-
-        var _ = Sdk.CreateMeterProviderBuilder()
-            .AddInMemoryExporter(ExportedMetrics)
-            .Build();
     }
 
     private static void OnMeasurementRecorded(Instrument instrument, int measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        MetricValues.TryGetValue(instrument.Name, out var currentCount);
-        MetricValues[instrument.Name] = currentCount + measurement;
+        if (!MetricValues.TryAdd(instrument.Name, measurement))
+        {
+            MetricValues[instrument.Name] += measurement;
+        }
     }
 
     private static void OnMeasurementRecorded(Instrument instrument, long measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        MetricValues.TryGetValue(instrument.Name, out var currentCount);
-        MetricValues[instrument.Name] = currentCount + measurement;
+        if (!MetricValues.TryAdd(instrument.Name, measurement))
+        {
+            MetricValues[instrument.Name] += measurement;
+        }
     }
 
     public long? GetValue(string metricName)
@@ -74,4 +78,4 @@
 
         return sum;
     }
-}*/
+}

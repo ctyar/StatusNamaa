@@ -4,15 +4,16 @@ namespace StatusNamaa.ApiService;
 
 public class RequestCountMetric
 {
-    public static readonly string Name = "StatusNamma.ApiService";
+    public static readonly string MetricName = "StatusNamma.ApiService";
+    public static readonly string InstrumentName = "request.count";
 
     private readonly UpDownCounter<int> _requestCount;
 
     public RequestCountMetric(IMeterFactory meterFactory)
     {
-        var meter = meterFactory.Create(Name);
+        var meter = meterFactory.Create(MetricName);
 
-        _requestCount = meter.CreateUpDownCounter<int>("request.count");
+        _requestCount = meter.CreateUpDownCounter<int>(InstrumentName);
     }
 
     public void Produce()
