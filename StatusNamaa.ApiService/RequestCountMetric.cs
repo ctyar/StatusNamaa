@@ -1,6 +1,6 @@
 using System.Diagnostics.Metrics;
 
-namespace StatusNamma.ApiService;
+namespace StatusNamaa.ApiService;
 
 public class RequestCountMetric
 {

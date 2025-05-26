@@ -2,7 +2,7 @@
 using System.Drawing;
 using Svg;
 
-namespace StatusNamma.ApiService;
+namespace StatusNamaa.ApiService;
 
 public static class SvgService
 {
