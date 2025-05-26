@@ -46,7 +46,7 @@ public class Program
 
         app.MapGet("/statusnamma", () =>
         {
-            var stream = SvgService.GetSvg();
+            var stream = SvgService.GetSvg([RequestCountMetric.Name, "process.runtime.dotnet.gc.allocations.size"]);
 
             return Results.File(stream, "image/svg+xml");
         });
@@ -62,8 +62,6 @@ public class Program
         });
 
         app.MapDefaultEndpoints();
-
-        SvgService.RegisterListener([RequestCountMetric.Name, "process.runtime.dotnet.monitor.lock_contention.count"]);
 
         app.Run();
     }

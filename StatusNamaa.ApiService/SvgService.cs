@@ -1,29 +1,35 @@
-﻿using System.Diagnostics.Metrics;
-using System.Drawing;
+﻿using System.Drawing;
 using Svg;
 
 namespace StatusNamaa.ApiService;
 
 public static class SvgService
 {
-    private static readonly Dictionary<string, long> Metrics = [];
-
-    public static Stream GetSvg()
+    public static Stream GetSvg(params string[] metricNames)
     {
         var svgDoc = new SvgDocument();
         var group = new SvgGroup();
         svgDoc.Children.Add(group);
 
-        foreach (var metric in Metrics)
+        var metricService = new MetricsService();
+
+        var x = 0;
+        foreach (var metricName in metricNames)
         {
-            var quality = GetQuality(metric.Value);
+            var metricValue = metricService.GetValue(metricName);
+            var color = GetColor(metricValue);
 
             group.Children.Add(new SvgRectangle
             {
                 Width = new SvgUnit(SvgUnitType.Em, 2),
                 Height = new SvgUnit(SvgUnitType.Em, 4),
-                Fill = GetColor(quality),
+                Fill = color,
+                StrokeWidth = new SvgUnit(SvgUnitType.Em, 0.05f),
+                Stroke = new SvgColourServer(Color.Black),
+                X = new SvgUnit(SvgUnitType.Em, x),
             });
+
+            x += 2;
         }
 
         var memoryStream = new MemoryStream();
@@ -33,83 +39,50 @@ public static class SvgService
         return memoryStream;
     }
 
-    private static double? GetQuality(long? currentValue)
+    private static SvgColourServer GetColor(long? currentValue)
     {
-        var bestValue = 0;
-        var worstValue = 10;
-
         if (currentValue is null)
         {
-            return null;
+            return new SvgColourServer(Color.Transparent);
         }
-        else if (currentValue <= bestValue)
+
+        var bestValue = 0;
+        var middleValue = 5;
+        var worstValue = 10;
+
+        if (currentValue <= bestValue)
         {
-            return 0.0;
+            return new SvgColourServer(Color.Green);
         }
-        else if (currentValue >= worstValue)
+        else if (currentValue <= middleValue)
         {
-            return 1.0;
+            var percentage = GetPercentage(currentValue.Value, bestValue, middleValue);
+
+            return Blend(Color.Green, Color.Yellow, percentage);
+        }
+        else if (currentValue <= worstValue)
+        {
+            var percentage = GetPercentage(currentValue.Value, bestValue, middleValue);
+
+            return Blend(Color.Yellow, Color.Red, percentage);
         }
         else
         {
-            return (double)(currentValue - bestValue) / (worstValue - bestValue);
+            return new SvgColourServer(Color.Red);
         }
     }
 
-    private static SvgColourServer GetColor(double? quality)
-    {
-        if (quality is null)
-        {
-            return new SvgColourServer(Color.White);
-        }
-
-        var color = Blend(Color.Green, Color.Red, quality.Value);
-
-        return new SvgColourServer(color);
-    }
-
-    public static Color Blend(Color color1, Color color2, double amount)
+    private static SvgColourServer Blend(Color color1, Color color2, double amount)
     {
         var r = (byte)(color1.R * (1 - amount) + color2.R * amount);
         var g = (byte)(color1.G * (1 - amount) + color2.G * amount);
         var b = (byte)(color1.B * (1 - amount) + color2.B * amount);
 
-        return Color.FromArgb(r, g, b);
+        return new SvgColourServer(Color.FromArgb(r, g, b));
     }
 
-    public static void RegisterListener(string[] names)
+    private static double GetPercentage(long currentValue, long minValue, long maxValue)
     {
-        var meterListener = new MeterListener
-        {
-            InstrumentPublished = (instrument, listener) =>
-            {
-                Console.WriteLine(instrument.Name);
-                if (names.Contains(instrument.Name))
-                {
-                    listener.EnableMeasurementEvents(instrument);
-                }
-            }
-        };
-
-        meterListener.SetMeasurementEventCallback<int>(OnMeasurementRecorded);
-        meterListener.SetMeasurementEventCallback<long>(OnMeasurementRecorded);
-
-        meterListener.Start();
-    }
-
-    private static void OnMeasurementRecorded(Instrument instrument, int measurement,
-        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
-    {
-        Metrics.TryGetValue(instrument.Name, out var currentCount);
-        Metrics[instrument.Name] = currentCount + measurement;
-        Console.WriteLine("m:" + instrument.Name);
-    }
-
-    private static void OnMeasurementRecorded(Instrument instrument, long measurement,
-        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
-    {
-        Metrics.TryGetValue(instrument.Name, out var currentCount);
-        Metrics[instrument.Name] = currentCount + measurement;
-        Console.WriteLine("m:" + instrument.Name);
+        return (double)(currentValue - minValue) / (maxValue - minValue);
     }
 }
