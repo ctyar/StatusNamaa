@@ -2,14 +2,14 @@ using System.Diagnostics.Metrics;
 
 namespace StatusNamaa.ApiService;
 
-public class RequestCountMetric
+public class QueueLengthMetric
 {
-    public static readonly string MetricName = "StatusNamma.ApiService";
-    public static readonly string InstrumentName = "request.count";
+    public static readonly string MetricName = "StatusNamaa.ApiService";
+    public static readonly string InstrumentName = "queue.length";
 
     private readonly UpDownCounter<int> _requestCount;
 
-    public RequestCountMetric(IMeterFactory meterFactory)
+    public QueueLengthMetric(IMeterFactory meterFactory)
     {
         var meter = meterFactory.Create(MetricName);
 

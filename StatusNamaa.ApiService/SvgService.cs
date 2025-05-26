@@ -5,18 +5,15 @@ namespace StatusNamaa.ApiService;
 
 public static class SvgService
 {
-    public static Stream GetSvg(params string[] metricNames)
+    public static Stream GetSvg()
     {
         var svgDoc = new SvgDocument();
         var group = new SvgGroup();
         svgDoc.Children.Add(group);
 
-        var metricService = new MetricsService();
-
         var x = 0;
-        foreach (var metricName in metricNames)
+        foreach (var metricValue in MetricsService.GetValues())
         {
-            var metricValue = metricService.GetValue(metricName);
             var color = GetColor(metricValue);
 
             group.Children.Add(new SvgRectangle

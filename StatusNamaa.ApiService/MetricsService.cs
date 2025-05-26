@@ -3,25 +3,60 @@ using OpenTelemetry.Metrics;
 
 namespace StatusNamaa.ApiService;
 
-public class MetricsService
+internal sealed class MetricsService
 {
+    private static string[] InstrumentNames = [];
+
     private static readonly MeterListener MeterListener = new();
     private static readonly Dictionary<string, long> MetricValues = [];
 
     public static readonly List<Metric> ExportedMetrics = [];
 
-    public static void Init()
+    static MetricsService()
     {
         MeterListener.InstrumentPublished = (instrument, listener) =>
         {
-            Console.WriteLine(instrument.Name);
-            listener.EnableMeasurementEvents(instrument);
+            if (InstrumentNames.Contains(instrument.Name))
+            {
+                listener.EnableMeasurementEvents(instrument);
+            }
         };
 
         MeterListener.SetMeasurementEventCallback<int>(OnMeasurementRecorded);
         MeterListener.SetMeasurementEventCallback<long>(OnMeasurementRecorded);
+        // TODO: Implement the rest
 
         MeterListener.Start();
+    }
+
+    public static void RegisterInstruments(string[] instrumentNames)
+    {
+        InstrumentNames = [.. instrumentNames];
+    }
+
+    public static IEnumerable<long?> GetValues()
+    {
+        foreach (var instrumentName in InstrumentNames)
+        {
+            yield return GetValue(instrumentName);
+        }
+    }
+
+    private static long? GetValue(string metricName)
+    {
+        if (MetricValues.TryGetValue(metricName, out var value))
+        {
+            return value;
+        }
+
+        var metric = ExportedMetrics.FirstOrDefault(i => i.Name == metricName);
+
+        if (metric is null)
+        {
+            return null;
+        }
+
+        return GetValue(metric);
     }
 
     private static void OnMeasurementRecorded(Instrument instrument, int measurement,
@@ -40,23 +75,6 @@ public class MetricsService
         {
             MetricValues[instrument.Name] += measurement;
         }
-    }
-
-    public long? GetValue(string metricName)
-    {
-        if (MetricValues.TryGetValue(metricName, out var value))
-        {
-            return value;
-        }
-
-        var metric = ExportedMetrics.FirstOrDefault(i => i.Name == metricName);
-
-        if (metric is null)
-        {
-            return null;
-        }
-
-        return GetValue(metric);
     }
 
     private static long GetValue(Metric metric)

@@ -4,20 +4,18 @@ namespace StatusNamaa.ApiService;
 
 public class Program
 {
-    private static readonly Lock _lock = new();
-
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.AddServiceDefaults(RequestCountMetric.MetricName);
+        builder.AddServiceDefaults();
 
         builder.Services.AddProblemDetails();
 
         builder.Services.AddOpenApi();
         builder.Services.AddSwaggerUI();
 
-        builder.Services.AddSingleton<RequestCountMetric>();
+        builder.Services.AddSingleton<QueueLengthMetric>();
 
         var app = builder.Build();
 
@@ -31,13 +29,13 @@ public class Program
 
         string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
-        app.MapGet("/produce", ([FromServices] RequestCountMetric requestCountMetric) =>
+        app.MapGet("/produce", ([FromServices] QueueLengthMetric requestCountMetric) =>
         {
             requestCountMetric.Produce();
 
             return "done";
         });
-        app.MapGet("/consume", ([FromServices] RequestCountMetric requestCountMetric) =>
+        app.MapGet("/consume", ([FromServices] QueueLengthMetric requestCountMetric) =>
         {
             requestCountMetric.Consume();
 
@@ -46,14 +44,12 @@ public class Program
 
         app.MapGet("/statusnamma", () =>
         {
-            var stream = SvgService.GetSvg([RequestCountMetric.InstrumentName, "process.runtime.dotnet.gc.allocations.size"]);
+            var stream = SvgService.GetSvg();
 
             return Results.File(stream, "image/svg+xml");
         });
 
         app.MapDefaultEndpoints();
-
-        MetricsService.Init();
 
         app.Run();
     }
