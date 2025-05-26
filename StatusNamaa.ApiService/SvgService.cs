@@ -11,13 +11,14 @@ public static class SvgService
         var group = new SvgGroup();
         svgDoc.Children.Add(group);
 
-        var metricService = new MetricsService();
+        MetricsListener.Refresh();
+        //var metricService = new MetricsService();
 
         var x = 0;
-        foreach (var metricName in metricNames)
+        foreach (var metric in MetricsListener.MetricValues)
         {
-            var metricValue = metricService.GetValue(metricName);
-            var color = GetColor(metricValue);
+            //var metricValue = metricService.GetValue(metricName);
+            var color = GetColor(metric.Value);
 
             group.Children.Add(new SvgRectangle
             {

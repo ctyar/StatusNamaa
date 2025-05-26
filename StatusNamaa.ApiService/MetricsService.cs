@@ -1,10 +1,6 @@
-﻿using System.Diagnostics.Metrics;
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
+﻿namespace StatusNamaa.ApiService;
 
-namespace StatusNamaa.ApiService;
-
-public class MetricsService
+/*public class MetricsService
 {
     private static readonly MeterListener MeterListener = new();
     private static readonly Dictionary<string, long> MetricValues = [];
@@ -78,4 +74,4 @@ public class MetricsService
 
         return sum;
     }
-}
+}*/

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.Metrics;
 
 namespace StatusNamaa.ApiService;
 
@@ -16,6 +17,8 @@ public class Program
 
         builder.Services.AddOpenApi();
         builder.Services.AddSwaggerUI();
+
+        builder.Services.AddTransient<IMetricsListener, MetricsListener>();
 
         builder.Services.AddSingleton<RequestCountMetric>();
 
