@@ -9,7 +9,9 @@ internal sealed class MetricsService
     private readonly string[] _instrumentNames;
 
     private readonly MeterListener _meterListener = new();
-    private readonly Dictionary<string, long> _metricValues = [];
+    private readonly Dictionary<string, int> _metricValues = [];
+    private readonly Dictionary<string, long> _metricValuesLong = [];
+    private readonly Dictionary<string, double> _metricValuesDouble = [];
 
     public MetricsService(List<Metric> exportedMetrics, string[] instrumentNames)
     {
@@ -48,6 +50,16 @@ internal sealed class MetricsService
             return value;
         }
 
+        if (_metricValuesLong.TryGetValue(metricName, out var valueLong))
+        {
+            return valueLong;
+        }
+
+        if (_metricValuesDouble.TryGetValue(metricName, out var valueDouble))
+        {
+            return (long)valueDouble;
+        }
+
         var metric = _exportedMetrics.FirstOrDefault(i => i.Name == metricName);
 
         if (metric is null)
@@ -70,18 +82,18 @@ internal sealed class MetricsService
     private void OnMeasurementRecorded(Instrument instrument, long measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        if (!_metricValues.TryAdd(instrument.Name, measurement))
+        if (!_metricValuesLong.TryAdd(instrument.Name, measurement))
         {
-            _metricValues[instrument.Name] += measurement;
+            _metricValuesLong[instrument.Name] += measurement;
         }
     }
 
     private void OnMeasurementRecorded(Instrument instrument, double measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        if (!_metricValues.TryAdd(instrument.Name, (long)measurement))
+        if (!_metricValuesDouble.TryAdd(instrument.Name, measurement))
         {
-            _metricValues[instrument.Name] += (long)measurement;
+            _metricValuesDouble[instrument.Name] += measurement;
         }
     }
 
