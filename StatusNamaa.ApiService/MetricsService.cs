@@ -5,55 +5,50 @@ namespace StatusNamaa.ApiService;
 
 internal sealed class MetricsService
 {
-    private static string[] InstrumentNames = [];
+    public readonly List<Metric> _exportedMetrics;
+    private readonly string[] _instrumentNames;
 
-    private static readonly MeterListener MeterListener = new();
-    private static readonly Dictionary<string, long> MetricValues = [];
+    private readonly MeterListener _meterListener = new();
+    private readonly Dictionary<string, long> _metricValues = [];
 
-    public static readonly List<Metric> ExportedMetrics = [];
-
-    static MetricsService()
+    public MetricsService(List<Metric> exportedMetrics, string[] instrumentNames)
     {
-        MeterListener.InstrumentPublished = (instrument, listener) =>
+        _exportedMetrics = exportedMetrics;
+        _instrumentNames = instrumentNames;
+
+        _meterListener.InstrumentPublished = (instrument, listener) =>
         {
-            Console.WriteLine(instrument.Name);
-            if (InstrumentNames.Contains(instrument.Name))
+            if (_instrumentNames.Contains(instrument.Name))
             {
                 listener.EnableMeasurementEvents(instrument);
             }
         };
 
-        MeterListener.SetMeasurementEventCallback<int>(OnMeasurementRecorded);
-        MeterListener.SetMeasurementEventCallback<long>(OnMeasurementRecorded);
+        _meterListener.SetMeasurementEventCallback<int>(OnMeasurementRecorded);
+        _meterListener.SetMeasurementEventCallback<long>(OnMeasurementRecorded);
+        _meterListener.SetMeasurementEventCallback<double>(OnMeasurementRecorded);
 
-        // TODO: Implement the rest
-
-        MeterListener.Start();
+        _meterListener.Start();
     }
 
-    public static void RegisterInstruments(string[] instrumentNames)
+    public IEnumerable<long?> GetValues()
     {
-        InstrumentNames = [.. instrumentNames];
-    }
+        _meterListener.RecordObservableInstruments();
 
-    public static IEnumerable<long?> GetValues()
-    {
-        MeterListener.RecordObservableInstruments();
-
-        foreach (var instrumentName in InstrumentNames)
+        foreach (var instrumentName in _instrumentNames)
         {
             yield return GetValue(instrumentName);
         }
     }
 
-    private static long? GetValue(string metricName)
+    private long? GetValue(string metricName)
     {
-        if (MetricValues.TryGetValue(metricName, out var value))
+        if (_metricValues.TryGetValue(metricName, out var value))
         {
             return value;
         }
 
-        var metric = ExportedMetrics.FirstOrDefault(i => i.Name == metricName);
+        var metric = _exportedMetrics.FirstOrDefault(i => i.Name == metricName);
 
         if (metric is null)
         {
@@ -63,23 +58,30 @@ internal sealed class MetricsService
         return GetValue(metric);
     }
 
-    private static void OnMeasurementRecorded(Instrument instrument, int measurement,
+    private void OnMeasurementRecorded(Instrument instrument, int measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        Console.WriteLine(instrument.Name);
-        if (!MetricValues.TryAdd(instrument.Name, measurement))
+        if (!_metricValues.TryAdd(instrument.Name, measurement))
         {
-            MetricValues[instrument.Name] += measurement;
+            _metricValues[instrument.Name] += measurement;
         }
     }
 
-    private static void OnMeasurementRecorded(Instrument instrument, long measurement,
+    private void OnMeasurementRecorded(Instrument instrument, long measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        Console.WriteLine(instrument.Name);
-        if (!MetricValues.TryAdd(instrument.Name, measurement))
+        if (!_metricValues.TryAdd(instrument.Name, measurement))
         {
-            MetricValues[instrument.Name] += measurement;
+            _metricValues[instrument.Name] += measurement;
+        }
+    }
+
+    private void OnMeasurementRecorded(Instrument instrument, double measurement,
+        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
+    {
+        if (!_metricValues.TryAdd(instrument.Name, (long)measurement))
+        {
+            _metricValues[instrument.Name] += (long)measurement;
         }
     }
 

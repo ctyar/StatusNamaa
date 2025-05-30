@@ -42,9 +42,9 @@ public class Program
             return "done";
         });
 
-        app.MapGet("/statusnamma", () =>
+        app.MapGet("/statusnamma", ([FromServices] SvgService svgService) =>
         {
-            var stream = SvgService.GetSvg();
+            var stream = svgService.GetSvg();
 
             return Results.File(stream, "image/svg+xml");
         });

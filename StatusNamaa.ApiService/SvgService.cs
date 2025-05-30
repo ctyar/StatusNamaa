@@ -3,25 +3,25 @@ using Svg;
 
 namespace StatusNamaa.ApiService;
 
-public static class SvgService
+internal sealed class SvgService
 {
-    public static Stream GetSvg()
+    private readonly MetricsService _metricsService;
+
+    public SvgService(MetricsService metricsService)
+    {
+        _metricsService = metricsService;
+    }
+
+    public Stream GetSvg()
     {
         var svgDoc = new SvgDocument();
         var group = new SvgGroup();
         svgDoc.Children.Add(group);
 
         var x = 0;
-        var metricService = new MetricsService2();
-        foreach (var metricValue in metricService.GetValues([QueueLengthMetric.InstrumentName, "process.runtime.dotnet.gc.allocations.size",
-                    "dotnet.process.memory.working_set",
-                    "dotnet.gc.heap.total_allocated",
-                    "dotnet.gc.last_collection.memory.committed_size",
-                    "dotnet.gc.last_collection.heap.size",
-                    "dotnet.gc.last_collection.heap.fragmentation.size"]))
+
+        foreach (var metricValue in _metricsService.GetValues())
         {
-            //Console.WriteLine(Environment.WorkingSet / (1024 * 1024));
-            Console.WriteLine(metricValue / (1024 * 1024));
             var color = GetColor(metricValue);
 
             group.Children.Add(new SvgRectangle
