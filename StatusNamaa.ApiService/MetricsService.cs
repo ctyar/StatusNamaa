@@ -16,6 +16,7 @@ internal sealed class MetricsService
     {
         MeterListener.InstrumentPublished = (instrument, listener) =>
         {
+            Console.WriteLine(instrument.Name);
             if (InstrumentNames.Contains(instrument.Name))
             {
                 listener.EnableMeasurementEvents(instrument);
@@ -24,6 +25,7 @@ internal sealed class MetricsService
 
         MeterListener.SetMeasurementEventCallback<int>(OnMeasurementRecorded);
         MeterListener.SetMeasurementEventCallback<long>(OnMeasurementRecorded);
+
         // TODO: Implement the rest
 
         MeterListener.Start();
@@ -36,6 +38,8 @@ internal sealed class MetricsService
 
     public static IEnumerable<long?> GetValues()
     {
+        MeterListener.RecordObservableInstruments();
+
         foreach (var instrumentName in InstrumentNames)
         {
             yield return GetValue(instrumentName);
@@ -62,6 +66,7 @@ internal sealed class MetricsService
     private static void OnMeasurementRecorded(Instrument instrument, int measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
+        Console.WriteLine(instrument.Name);
         if (!MetricValues.TryAdd(instrument.Name, measurement))
         {
             MetricValues[instrument.Name] += measurement;
@@ -71,6 +76,7 @@ internal sealed class MetricsService
     private static void OnMeasurementRecorded(Instrument instrument, long measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
+        Console.WriteLine(instrument.Name);
         if (!MetricValues.TryAdd(instrument.Name, measurement))
         {
             MetricValues[instrument.Name] += measurement;

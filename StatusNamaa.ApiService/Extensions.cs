@@ -52,7 +52,12 @@ public static class Extensions
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
-                    .AddStatusNamaa([QueueLengthMetric.InstrumentName, "process.runtime.dotnet.gc.allocations.size"]);
+                    .AddStatusNamaa([QueueLengthMetric.InstrumentName, "process.runtime.dotnet.gc.allocations.size",
+                    "dotnet.process.memory.working_set",
+                    "dotnet.gc.heap.total_allocated",
+                    "dotnet.gc.last_collection.memory.committed_size",
+                    "dotnet.gc.last_collection.heap.size",
+                    "dotnet.gc.last_collection.heap.fragmentation.size"]);
 
                 metrics.AddMeter(QueueLengthMetric.MetricName);
             })

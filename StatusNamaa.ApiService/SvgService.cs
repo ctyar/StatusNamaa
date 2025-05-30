@@ -12,8 +12,16 @@ public static class SvgService
         svgDoc.Children.Add(group);
 
         var x = 0;
-        foreach (var metricValue in MetricsService.GetValues())
+        var metricService = new MetricsService2();
+        foreach (var metricValue in metricService.GetValues([QueueLengthMetric.InstrumentName, "process.runtime.dotnet.gc.allocations.size",
+                    "dotnet.process.memory.working_set",
+                    "dotnet.gc.heap.total_allocated",
+                    "dotnet.gc.last_collection.memory.committed_size",
+                    "dotnet.gc.last_collection.heap.size",
+                    "dotnet.gc.last_collection.heap.fragmentation.size"]))
         {
+            //Console.WriteLine(Environment.WorkingSet / (1024 * 1024));
+            Console.WriteLine(metricValue / (1024 * 1024));
             var color = GetColor(metricValue);
 
             group.Children.Add(new SvgRectangle
