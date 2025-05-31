@@ -17,7 +17,7 @@ internal sealed class MetricService
         return percentage > 100 ? 100 : percentage;
     }
 
-    public long GetRamUsage()
+    public long GetMemoryUsage()
     {
         // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/Metrics/RuntimeMetrics.cs#L40
         var memoryUsage = Environment.WorkingSet / GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;

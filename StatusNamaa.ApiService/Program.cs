@@ -44,9 +44,11 @@ public class Program
 
         app.MapGet("/statusnamma", ([FromServices] SvgService svgService) =>
         {
-            var stream = svgService.GetSvg();
+            var svgDoc = svgService.GetSvg();
 
-            return Results.File(stream, "image/svg+xml");
+            File.WriteAllText("C:\\Users\\ctyar\\Desktop\\new.svg", svgDoc);
+
+            return Results.File(System.Text.Encoding.UTF8.GetBytes(svgDoc), "image/svg+xml");
         });
 
         app.MapGet("/statusnamma2", async ([FromServices] SvgService svgService) =>
@@ -54,7 +56,7 @@ public class Program
             var metricService = new MetricService();
             var cpuUsage = await metricService.GetCpuUsageAsync();
 
-            return $"CPU: {cpuUsage} Ram: {metricService.GetRamUsage()}" +
+            return $"CPU: {cpuUsage} Ram: {metricService.GetMemoryUsage()}" +
                 $" ThreadPoolQueueLength: {metricService.GetThreadPoolQueueLength()}" +
                 $" LockContentions: {metricService.GetLockContentions()}";
         });
