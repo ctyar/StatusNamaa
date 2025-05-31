@@ -49,6 +49,16 @@ public class Program
             return Results.File(stream, "image/svg+xml");
         });
 
+        app.MapGet("/statusnamma2", async ([FromServices] SvgService svgService) =>
+        {
+            var metricService = new MetricService();
+            var cpuUsage = await metricService.GetCpuUsageAsync();
+
+            return $"CPU: {cpuUsage} Ram: {metricService.GetRamUsage()}" +
+                $" ThreadPoolQueueLength: {metricService.GetThreadPoolQueueLength()}" +
+                $" LockContentions: {metricService.GetLockContentions()}";
+        });
+
         app.MapDefaultEndpoints();
 
         app.Run();

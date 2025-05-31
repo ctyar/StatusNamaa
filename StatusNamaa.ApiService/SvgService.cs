@@ -5,9 +5,9 @@ namespace StatusNamaa.ApiService;
 
 internal sealed class SvgService
 {
-    private readonly MetricsService _metricsService;
+    private readonly ListenerService _metricsService;
 
-    public SvgService(MetricsService metricsService)
+    public SvgService(ListenerService metricsService)
     {
         _metricsService = metricsService;
     }

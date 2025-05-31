@@ -10,7 +10,7 @@ public static class MeterProviderBuilderExtensions
         var exportedMetrics = new List<Metric>();
         builder.AddInMemoryExporter(exportedMetrics);
 
-        var metricService = new MetricsService(exportedMetrics, instrumentNames);
+        var metricService = new ListenerService(exportedMetrics, instrumentNames);
 
         services.AddSingleton(metricService);
         services.AddSingleton<SvgService>();

@@ -3,7 +3,7 @@ using OpenTelemetry.Metrics;
 
 namespace StatusNamaa.ApiService;
 
-internal sealed class MetricsService
+internal sealed class ListenerService
 {
     public readonly List<Metric> _exportedMetrics;
     private readonly string[] _instrumentNames;
@@ -13,7 +13,7 @@ internal sealed class MetricsService
     private readonly Dictionary<string, long> _metricValuesLong = [];
     private readonly Dictionary<string, double> _metricValuesDouble = [];
 
-    public MetricsService(List<Metric> exportedMetrics, string[] instrumentNames)
+    public ListenerService(List<Metric> exportedMetrics, string[] instrumentNames)
     {
         _exportedMetrics = exportedMetrics;
         _instrumentNames = instrumentNames;
