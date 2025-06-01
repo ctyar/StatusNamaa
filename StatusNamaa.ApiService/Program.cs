@@ -16,7 +16,16 @@ public class Program
         builder.Services.AddSwaggerUI();
 
         builder.Services.AddSingleton<QueueLengthMetric>();
-        builder.Services.AddStatusNamaa();
+        builder.Services.AddSingleton<ListenerService>();
+        builder.Services.AddStatusNamaa(p =>
+        {
+            p.Add("Queue length", "{0}", async services =>
+            {
+                var listenerService = services.GetRequiredService<ListenerService>();
+
+                return await listenerService.GetValue();
+            });
+        });
 
         var app = builder.Build();
 
