@@ -42,29 +42,16 @@ public class Program
             return "done";
         });
 
-        app.MapGet("/statusnamma", ([FromServices] SvgService svgService) =>
+        app.MapGet("/statusnamma", async ([FromServices] SvgService svgService) =>
         {
-            var svgDoc = svgService.GetSvg(
-            [
-                new MetricDisplayItem("CPU", 100, "100%"),
-                new MetricDisplayItem("Memory", 70, "70%"),
-                new MetricDisplayItem("ThreadPool Queue", 0, "0"),
-                new MetricDisplayItem("Lock Contentions", 19, "19")
-            ]);
+            var metricService = new MetricService();
+            var metrics = await metricService.GetMetrics();
+
+            var svgDoc = svgService.GetSvg(metrics);
 
             File.WriteAllText("C:\\Users\\ctyar\\Desktop\\new.svg", svgDoc);
 
             return Results.File(System.Text.Encoding.UTF8.GetBytes(svgDoc), "image/svg+xml");
-        });
-
-        app.MapGet("/statusnamma2", async ([FromServices] SvgService svgService) =>
-        {
-            var metricService = new MetricService();
-            var cpuUsage = await metricService.GetCpuUsageAsync();
-
-            return $"CPU: {cpuUsage} Ram: {metricService.GetMemoryUsage()}" +
-                $" ThreadPoolQueueLength: {metricService.GetThreadPoolQueueLength()}" +
-                $" LockContentions: {metricService.GetLockContentions()}";
         });
 
         app.MapDefaultEndpoints();

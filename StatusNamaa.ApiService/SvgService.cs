@@ -42,7 +42,7 @@ internal sealed class SvgService
         for (var i = 0; i < metrics.Count; i++)
         {
             var metric = metrics[i];
-            svgDoc.AppendLine($"<text x=\"331\" y=\"{50 + (i * 22)}\" fill=\"{GetColor(metric.Value)}\">{metric.DisplayValue}</text>");
+            svgDoc.AppendLine($"<text x=\"331\" y=\"{50 + (i * 22)}\" fill=\"{GetColor(metric.Value)}\">{string.Format(metric.Format, metric.Value)}</text>");
         }
 
         svgDoc.AppendLine("</g>");
@@ -60,7 +60,7 @@ internal sealed class SvgService
         svgDoc.AppendLine("</g>");
     }
 
-    private static void AddMetricBar(StringBuilder svgDoc, long value, int MetricIndex)
+    private static void AddMetricBar(StringBuilder svgDoc, double value, int MetricIndex)
     {
         svgDoc.AppendLine("<g>");
 
@@ -68,7 +68,7 @@ internal sealed class SvgService
         {
             var color = Colors[i].Item2;
 
-            if (value < Colors[i].Item1)
+            if (value.CompareTo(Colors[i].Item1) < 0)
             {
                 break;
             }
@@ -104,7 +104,7 @@ internal sealed class SvgService
         svgDoc.AppendLine("</svg>");
     }
 
-    private static string GetColor(long value)
+    private static string GetColor(double value)
     {
         foreach (var color in Colors)
         {
