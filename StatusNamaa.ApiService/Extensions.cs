@@ -52,12 +52,7 @@ public static class Extensions
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
-                    .AddStatusNamaa(builder.Services, [QueueLengthMetric.InstrumentName,
-                        "dotnet.process.memory.working_set",
-                        "dotnet.process.cpu.time",
-                        "dotnet.thread_pool.queue.length",
-                        "dotnet.monitor.lock_contentions",
-                        "dotnet.exceptions"]);
+                    .AddStatusNamaa(builder.Services);
 
                 metrics.AddMeter(QueueLengthMetric.MetricName);
             })

@@ -5,14 +5,14 @@ namespace StatusNamaa.ApiService;
 public static class MeterProviderBuilderExtensions
 {
     public static MeterProviderBuilder AddStatusNamaa(this MeterProviderBuilder builder,
-        IServiceCollection services, string[] instrumentNames)
+        IServiceCollection services)
     {
-        var exportedMetrics = new List<Metric>();
-        builder.AddInMemoryExporter(exportedMetrics);
+        //var exportedMetrics = new List<Metric>();
+        //builder.AddInMemoryExporter(exportedMetrics);
 
-        var metricService = new ListenerService(exportedMetrics, instrumentNames);
+        //var metricService = new ListenerService(exportedMetrics, instrumentNames);
 
-        services.AddSingleton(metricService);
+        services.AddSingleton<MetricService>();
         services.AddSingleton<SvgService>();
 
         return builder;

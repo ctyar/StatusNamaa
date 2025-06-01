@@ -25,6 +25,7 @@ public class Program
         {
             app.MapOpenApi();
             app.MapSwaggerUI();
+            app.MapStatusNamaa();
         }
 
         string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
