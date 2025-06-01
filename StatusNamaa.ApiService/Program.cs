@@ -44,7 +44,13 @@ public class Program
 
         app.MapGet("/statusnamma", ([FromServices] SvgService svgService) =>
         {
-            var svgDoc = svgService.GetSvg();
+            var svgDoc = svgService.GetSvg(
+            [
+                new MetricDisplayItem("CPU", 100, "100%"),
+                new MetricDisplayItem("Memory", 70, "70%"),
+                new MetricDisplayItem("ThreadPool Queue", 0, "0"),
+                new MetricDisplayItem("Lock Contentions", 19, "19")
+            ]);
 
             File.WriteAllText("C:\\Users\\ctyar\\Desktop\\new.svg", svgDoc);
 

@@ -4,8 +4,8 @@ namespace StatusNamaa.ApiService;
 
 internal sealed class SvgService
 {
-    private static readonly List<Tuple<int, string>> Colors = new()
-    {
+    private static readonly List<Tuple<int, string>> Colors =
+    [
         new(0, "#b0fd6a"),
         new(10, "#b9fa63"),
         new(20, "#caf85e"),
@@ -16,57 +16,51 @@ internal sealed class SvgService
         new(70, "#fc9832"),
         new(80, "#fc3e21"),
         new(90, "#f30b0b"),
-    };
+    ];
 
-    public string GetSvg()
+    public string GetSvg(List<MetricDisplayItem> metrics)
     {
         var svgDoc = new StringBuilder();
 
         AddHeader(svgDoc);
 
-        AddMetricNames(svgDoc);
+        AddMetricNames(svgDoc, metrics);
 
-        AddMetricBars(svgDoc, [100, 70, 0, 19]);
+        AddMetricBars(svgDoc, metrics);
 
-        AddMetricValues(svgDoc, new List<Tuple<int, string>>
-        {
-            new(100, "100%"),
-            new(70, "70%"),
-            new(0, "0"),
-            new(19, "19")
-        });
+        AddMetricValues(svgDoc, metrics);
 
         AddFooter(svgDoc);
 
         return svgDoc.ToString();
     }
 
-    private static void AddMetricValues(StringBuilder svgDoc, List<Tuple<int, string>> values)
+    private static void AddMetricValues(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
     {
         svgDoc.AppendLine("""<g font-size="18" font-weight="500" text-anchor="end">""");
 
-        for (var i = 0; i < values.Count; i++)
+        for (var i = 0; i < metrics.Count; i++)
         {
-            var value = values[i];
-            svgDoc.AppendLine($"<text x=\"365\" y=\"{50 + (i * 22)}\" fill=\"{GetColor(value.Item1)}\">{value.Item2}</text>");
+            var metric = metrics[i];
+            svgDoc.AppendLine($"<text x=\"331\" y=\"{50 + (i * 22)}\" fill=\"{GetColor(metric.Value)}\">{metric.DisplayValue}</text>");
         }
 
         svgDoc.AppendLine("</g>");
     }
 
-    private static void AddMetricBars(StringBuilder svgDoc, List<int> values)
+    private static void AddMetricBars(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
     {
         svgDoc.AppendLine("<g>");
 
-        for (var i = 0; i < values.Count; i++)
+        for (var i = 0; i < metrics.Count; i++)
         {
-            AddMetricBar(svgDoc, values[i], i);
+            AddMetricBar(svgDoc, metrics[i].Value, i);
         }
 
         svgDoc.AppendLine("</g>");
     }
 
-    private static void AddMetricBar(StringBuilder svgDoc, int value, int MetricIndex)
+    private static void AddMetricBar(StringBuilder svgDoc, long value, int MetricIndex)
     {
         svgDoc.AppendLine("<g>");
 
@@ -79,22 +73,22 @@ internal sealed class SvgService
                 break;
             }
 
-            svgDoc.AppendLine($"<rect x=\"{161 + (i * 16)}\" y=\"{38 + (MetricIndex * 22)}\" width=\"13\" height=\"13\" rx=\"2\" fill=\"{color}\"/>");
+            svgDoc.AppendLine($"<rect x=\"{123 + (i * 16)}\" y=\"{38 + (MetricIndex * 22)}\" width=\"13\" height=\"13\" rx=\"2\" fill=\"{color}\"/>");
         }
 
         svgDoc.AppendLine("</g>");
     }
 
-    private static void AddMetricNames(StringBuilder svgDoc)
+    private static void AddMetricNames(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
     {
-        svgDoc.AppendLine("""
-            <g font-size="13" font-weight="400">
-              <text x="10" y="50" fill="#53b1fd">CPU</text>
-              <text x="10" y="72" fill="#53b1fd">Memory</text>
-              <text x="10" y="94" fill="#53b1fd">ThreadPool Queue Length</text>
-              <text x="10" y="116" fill="#53b1fd">Lock Contentions</text>
-            </g>
-            """);
+        svgDoc.AppendLine("""<g font-size="13" font-weight="400">""");
+
+        for (var i = 0; i < metrics.Count; i++)
+        {
+            svgDoc.AppendLine($"""<text x="10" y="{50 + i * 22}" fill="#53b1fd">{metrics[i].Name}</text>""");
+        }
+
+        svgDoc.AppendLine("</g>");
     }
 
     private static void AddHeader(StringBuilder svgDoc)
@@ -110,20 +104,16 @@ internal sealed class SvgService
         svgDoc.AppendLine("</svg>");
     }
 
-    private static string GetColor(int value)
+    private static string GetColor(long value)
     {
-        return value switch
+        foreach (var color in Colors)
         {
-            >= 90 => "#f30b0b",
-            >= 80 => "#fc3e21",
-            >= 70 => "#fc9832",
-            >= 60 => "#f9c03c",
-            >= 50 => "#f9d94b",
-            >= 40 => "#f2e95b",
-            >= 30 => "#e0f75f",
-            >= 20 => "#caf85e",
-            >= 10 => "#b9fa63",
-            _ => "#b0fd6a"
-        };
+            if (value <= color.Item1)
+            {
+                return color.Item2;
+            }
+        }
+
+        return Colors.Last().Item2;
     }
 }
