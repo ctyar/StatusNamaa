@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace StatusNamaa.ApiService;
+namespace StatusNamaa;
 
 internal sealed class SvgService
 {
@@ -95,7 +95,7 @@ internal sealed class SvgService
     {
         svgDoc.AppendLine("""
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;">
-            <text x="10" y="24" fill="#bfc9d1" font-size="18" font-weight="500">Status Namma</text>
+            <text x="10" y="24" fill="#bfc9d1" font-size="18" font-weight="500">Status Namaa</text>
             """);
     }
 

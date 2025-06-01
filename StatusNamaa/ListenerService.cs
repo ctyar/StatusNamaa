@@ -1,7 +1,7 @@
-﻿using System.Diagnostics.Metrics;
+﻿/*using System.Diagnostics.Metrics;
 using OpenTelemetry.Metrics;
 
-namespace StatusNamaa.ApiService;
+namespace StatusNamaa;
 
 internal sealed class ListenerService
 {
@@ -117,3 +117,4 @@ internal sealed class ListenerService
         return sum;
     }
 }
+*/

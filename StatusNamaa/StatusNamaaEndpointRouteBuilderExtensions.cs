@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
-namespace StatusNamaa.ApiService;
+namespace StatusNamaa;
 
 public static class StatusNamaaEndpointRouteBuilderExtensions
 {

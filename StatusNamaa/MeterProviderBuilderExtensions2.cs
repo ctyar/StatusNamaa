@@ -1,8 +1,8 @@
-﻿using OpenTelemetry.Metrics;
+﻿/*using OpenTelemetry.Metrics;
 
-namespace StatusNamaa.ApiService;
+namespace StatusNamaa;
 
-public static class MeterProviderBuilderExtensions
+public static class MeterProviderBuilderExtensions2
 {
     public static MeterProviderBuilder AddStatusNamaa(this MeterProviderBuilder builder,
         IServiceCollection services)
@@ -18,3 +18,4 @@ public static class MeterProviderBuilderExtensions
         return builder;
     }
 }
+*/

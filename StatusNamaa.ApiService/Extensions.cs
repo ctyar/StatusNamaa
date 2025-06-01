@@ -51,8 +51,7 @@ public static class Extensions
             {
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation()
-                    .AddStatusNamaa(builder.Services);
+                    .AddRuntimeInstrumentation();
 
                 metrics.AddMeter(QueueLengthMetric.MetricName);
             })

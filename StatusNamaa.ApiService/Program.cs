@@ -16,6 +16,7 @@ public class Program
         builder.Services.AddSwaggerUI();
 
         builder.Services.AddSingleton<QueueLengthMetric>();
+        builder.Services.AddStatusNamaa();
 
         var app = builder.Build();
 
@@ -25,7 +26,6 @@ public class Program
         {
             app.MapOpenApi();
             app.MapSwaggerUI();
-            app.MapStatusNamaa();
         }
 
         string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
@@ -43,17 +43,7 @@ public class Program
             return "done";
         });
 
-        app.MapGet("/statusnamma", async ([FromServices] SvgService svgService) =>
-        {
-            var metricService = new MetricService();
-            var metrics = await metricService.GetMetrics();
-
-            var svgDoc = svgService.GetSvg(metrics);
-
-            File.WriteAllText("C:\\Users\\ctyar\\Desktop\\new.svg", svgDoc);
-
-            return Results.File(System.Text.Encoding.UTF8.GetBytes(svgDoc), "image/svg+xml");
-        });
+        app.MapStatusNamaa();
 
         app.MapDefaultEndpoints();
 

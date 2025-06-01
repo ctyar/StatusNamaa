@@ -1,4 +1,4 @@
-﻿namespace StatusNamaa.ApiService;
+﻿namespace StatusNamaa;
 
 internal sealed class MetricDisplayItem
 {
