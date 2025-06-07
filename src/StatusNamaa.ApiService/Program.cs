@@ -12,14 +12,22 @@ public class Program
 
         builder.Services.AddProblemDetails();
 
-        builder.Services.AddOpenApi();
+        builder.Services.AddOpenApi(o =>
+        {
+            o.AddDocumentTransformer((doc, context, cancellationToken) =>
+            {
+                doc.Info.Description = "<img src=\"statusnamaa.svg\" >";
+
+                return Task.CompletedTask;
+            });
+        });
         builder.Services.AddSwaggerUI();
 
         builder.Services.AddSingleton<QueueLengthMetric>();
         builder.Services.AddSingleton<ListenerService>();
         builder.Services.AddStatusNamaa(p =>
         {
-            p.Add("Queue length", "{0}", async services =>
+            p.Add("My Custom Value", "{0}", async services =>
             {
                 var listenerService = services.GetRequiredService<ListenerService>();
 
