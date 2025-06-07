@@ -1,10 +1,10 @@
 using System.Diagnostics.Metrics;
 
-namespace StatusNamaa.ApiService;
+namespace ApiService;
 
 public class QueueLengthMetric
 {
-    public static readonly string MetricName = "StatusNamaa.ApiService";
+    public static readonly string MetricName = "ApiService";
     public static readonly string InstrumentName = "queue.length";
 
     private readonly UpDownCounter<int> _requestCount;

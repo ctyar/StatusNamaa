@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.Metrics;
 
-namespace StatusNamaa.ApiService;
+namespace ApiService;
 
 internal sealed class ListenerService
 {

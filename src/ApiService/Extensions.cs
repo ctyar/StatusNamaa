@@ -1,9 +1,9 @@
+using ApiService;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using StatusNamaa.ApiService;
 
 namespace Microsoft.Extensions.Hosting;
 

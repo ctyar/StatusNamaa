@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using StatusNamaa;
 
-namespace StatusNamaa.ApiService;
+namespace ApiService;
 
 public class Program
 {

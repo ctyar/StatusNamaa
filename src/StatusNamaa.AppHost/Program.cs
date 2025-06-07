@@ -1,5 +1,5 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var apiService = builder.AddProject<Projects.StatusNamaa_ApiService>("apiservice");
+var apiService = builder.AddProject<Projects.ApiService>("apiservice");
 
 builder.Build().Run();
