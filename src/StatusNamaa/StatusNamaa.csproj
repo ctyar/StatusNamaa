@@ -1,5 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <RootNamespace>StatusNamaa</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>StatusNamaa</PackageId>
+    <PackageTags>observability;monitoring;telemetry;metrics;opentelemetry</PackageTags>
+    <Title>StatusNamaa</Title>
+    <Description>Easily integrate a lightweight metrics dashboard into your ASP.NET Core application. This package provides a simple yet effective way to monitor application status, accessible at /statusnamaa.svg.</Description>
+    <Authors>Shahriyar Qulami</Authors>
+    <PackageProjectUrl>https://github.com/ctyar/StatusNamaa</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ctyar/StatusNamaa</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <!-- TODO: Uncomment and fix the blocking issue
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>-->
+    <PackageReference Include="DotNet.ReproducibleBuilds">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
