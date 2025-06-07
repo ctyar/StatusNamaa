@@ -32,6 +32,8 @@ Easily integrate a lightweight metrics dashboard into your ASP.NET Core applicat
 
 ### Metrics
 
+### Caching
+
 ## Pre-release builds
 
 Get the package from [here](https://github.com/ctyar/StatusNamaa/pkgs/nuget/StatusNamaa).
