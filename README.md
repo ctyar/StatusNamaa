@@ -5,6 +5,24 @@
 
 Easily integrate a lightweight metrics dashboard into your ASP.NET Core application. This package provides a simple yet effective way to monitor application status, accessible at /statusnamaa.svg.
 
+## Usage
+
+In your `Program.cs` file Add `app.AddStatusNamaa()` and `app.MapStatusNamaa()`:
+
+    ```diff
+    + builder.Services.AddStatusNamaa();
+
+      var app = builder.Build();
+
+    + app.MapStatusNamaa();
+    ```
+
+## Features
+### Authentication
+
+### Custom values
+
+### Metrics
 
 ## Pre-release builds
 
