@@ -52,9 +52,9 @@ public class Program
             return "done";
         });
 
-        app.MapStatusNamaa();
-
         app.MapDefaultEndpoints();
+
+        app.MapStatusNamaa();
 
         app.Run();
     }
