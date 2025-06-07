@@ -11,13 +11,13 @@ Easily integrate a lightweight metrics dashboard into your ASP.NET Core applicat
 
 In your `Program.cs` file Add `app.AddStatusNamaa()` and `app.MapStatusNamaa()`:
 
-    ```diff
-    + builder.Services.AddStatusNamaa();
+```diff
++ builder.Services.AddStatusNamaa();
 
-      var app = builder.Build();
+  var app = builder.Build();
 
-    + app.MapStatusNamaa();
-    ```
++ app.MapStatusNamaa();
+```
 
 ## Features
 ### Authentication
