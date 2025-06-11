@@ -24,9 +24,11 @@ internal sealed class SvgService
 
         AddHeader(svgDoc);
 
+#if DEBUG
         metrics[0].Value = 100;
         metrics[1].Value = 80;
         metrics[2].Value = 25;
+#endif
         AddBody(svgDoc, metrics);
 
         AddFooter(svgDoc);
