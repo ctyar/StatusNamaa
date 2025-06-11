@@ -39,7 +39,7 @@ internal sealed class SvgService
     private static void AddHeader(StringBuilder svgDoc)
     {
         svgDoc.AppendLine("""
-            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="620px" height="280px" viewBox="0 0 620 280">
             <text x="1rem" y="4rem" fill="#bfc9d1" font-size="4rem" font-weight="500">Status Namaa</text>
             """);
     }
