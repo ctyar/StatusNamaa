@@ -16,8 +16,8 @@ public static class StatusNamaaEndpointRouteBuilderExtensions
     public static RouteHandlerBuilder MapStatusNamaa(this IEndpointRouteBuilder routeBuilder)
     {
         var endpoint = routeBuilder.MapGet("statusnamaa.svg",
-            async ([FromServices] SvgService svgService, [FromServices] MetricService metricService) =>
-                Results.Content(await Endpoints.GetSvgAsync(svgService, metricService), "image/svg+xml"));
+            async ([FromServices] SvgService svgService, [FromServices] MetricDisplayService metricDisplayService) =>
+                Results.Content(await Endpoints.GetSvgAsync(svgService, metricDisplayService), "image/svg+xml"));
 
         endpoint.ExcludeFromDescription();
 

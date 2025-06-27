@@ -2,9 +2,9 @@
 
 internal static class Endpoints
 {
-    public static async Task<string> GetSvgAsync(SvgService svgService, MetricService metricService)
+    public static async Task<string> GetSvgAsync(SvgService svgService, MetricDisplayService metricDisplayService)
     {
-        var metrics = await metricService.GetMetrics();
+        var metrics = await metricDisplayService.GetMetrics();
 
         return svgService.GetSvg(metrics);
     }

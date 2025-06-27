@@ -8,7 +8,7 @@ public static class MeterProviderBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AddSingleton<MetricService>();
+        services.AddSingleton<MetricDisplayService>();
         services.AddSingleton<SvgService>();
 
         return services;
@@ -24,31 +24,9 @@ public static class MeterProviderBuilderExtensions
             configureOptions(options);
         });
 
-        services.AddSingleton<MetricService>();
+        services.AddSingleton<MetricDisplayService>();
         services.AddSingleton<SvgService>();
 
         return services;
     }
-}
-
-public class StatusNamaaOptions
-{
-    public List<StatusNamaaOptionsItem> Metrics { get; set; } = [];
-
-    public void Add(string name, string format, Func<IServiceProvider, Task<double>> handler)
-    {
-        Metrics.Add(new StatusNamaaOptionsItem
-        {
-            Name = name,
-            Format = format,
-            Handler = handler
-        });
-    }
-}
-
-public class StatusNamaaOptionsItem
-{
-    public string Name { get; set; } = string.Empty;
-    public string Format { get; set; } = "{0}";
-    public Func<IServiceProvider, Task<double>> Handler { get; set; } = null!;
 }

@@ -26,7 +26,7 @@ internal sealed class SvgService
 
 #if DEBUG
         metrics[0].Value = 100;
-        metrics[1].Value = 80;
+        metrics[1].Value = 80.134;
         metrics[2].Value = 25;
 #endif
         AddBody(svgDoc, metrics);
