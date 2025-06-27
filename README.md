@@ -26,10 +26,30 @@ Easily integrate a lightweight metrics dashboard into your ASP.NET Core applicat
     ```
 
 ## Features
+### Customizing metrics
+You can configure which metrics appear on the status page using `StatusNamaaOptions`:
+```csharp
+builder.Services.AddStatusNamaa(o =>
+{
+    // Clear default metrics
+    o.Metrics.Clear();
+
+    // Add a custom metric
+    p.Add("My Custom Value", "{0}", services =>
+    {
+        var myService = services.GetRequiredService<MyService>();
+
+        return myService.GetValue();
+    });
+});
+```
+
 ### Authentication
-
-### Custom values
-
+You can secure the status page by chaining `RequireAuthorization()` to the result of `MapStatusNamaa()`:
+```csharp
+app.MapStatusNamaa()
+    .RequireAuthorization();
+```
 ### Metrics
 
 ### Caching
