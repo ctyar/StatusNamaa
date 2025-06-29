@@ -91,7 +91,10 @@ internal sealed class SvgService
 
     private static void AddMetricValue(StringBuilder svgDoc, MetricDisplayItem metric, int rowIndex)
     {
-        svgDoc.AppendLine($"""<text x="{10 + (17 * 12) + (20 * 10)}px" y="{84 + rowIndex * 24}px" fill="{GetColor(metric.Value)}">""" +
+        svgDoc.AppendLine($"""
+            <text x="{480 - 10}px" y="{84 + rowIndex * 24}px"
+             fill="{GetColor(metric.Value)}" text-anchor="end"> 
+            """ +
             $"{string.Format(metric.Format, metric.Value)}</text>");
     }
 
