@@ -1,4 +1,6 @@
-﻿namespace StatusNamaa;
+﻿using System.Reflection;
+
+namespace StatusNamaa;
 
 internal sealed class MetricService
 {
@@ -42,5 +44,12 @@ internal sealed class MetricService
         // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/Metrics/RuntimeMetrics.cs#L129
         // TODO: Read the metric dotnet.exceptions
         throw new NotImplementedException();
+    }
+
+    public static string? GetVersion()
+    {
+        return Assembly.GetExecutingAssembly()
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+            .InformationalVersion;
     }
 }

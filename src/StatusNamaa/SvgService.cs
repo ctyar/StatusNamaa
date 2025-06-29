@@ -31,14 +31,14 @@ internal sealed class SvgService
 #endif
         AddBody(svgDoc, metrics);
 
-        AddFooter(svgDoc);
+        AddFooter(svgDoc, metrics);
 
         return svgDoc.ToString();
     }
 
     private static void AddHeader(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
     {
-        var height = 36 + 10 + ((metrics.Count + 1) * 24) + 10;
+        var height = 36 + 10 + ((metrics.Count + 2) * 24) + 10;
         svgDoc.AppendLine($"""
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="480px" height="{height}px" viewBox="0 0 480 {height}">
             <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
@@ -98,8 +98,19 @@ internal sealed class SvgService
             $"{string.Format(metric.Format, metric.Value)}</text>");
     }
 
-    private static void AddFooter(StringBuilder svgDoc)
+    private static void AddFooter(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
     {
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        var version = MetricService.GetVersion();
+
+        svgDoc.AppendLine($"""
+            <text x="10px" y="{84 + (metrics.Count) * 24}px" fill="#53b1fd" font-size="10px">Environment: 
+                <tspan fill="{Colors[0].Item2}">{environment}</tspan>
+                 Version: 
+                <tspan fill="{Colors[0].Item2}">{version}</tspan>
+            </text>
+            """);
+
         svgDoc.AppendLine("</svg>");
     }
 
