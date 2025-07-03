@@ -1,20 +1,6 @@
 ﻿#nullable enable
 
-static StatusNamaa.MeterProviderBuilderExtensions.AddStatusNamaa(this Microsoft.Extensions.DependencyInjection.IServiceCollection services) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
-static StatusNamaa.MeterProviderBuilderExtensions.AddStatusNamaa(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<StatusNamaa.StatusNamaaOptions> configureOptions) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
-static StatusNamaa.StatusNamaaEndpointRouteBuilderExtensions.MapStatusNamaa(this Microsoft.AspNetCore.Routing.IEndpointRouteBuilder routeBuilder) -> Microsoft.AspNetCore.Builder.RouteHandlerBuilder
 StatusNamaa.MeterProviderBuilderExtensions
-StatusNamaa.StatusNamaaEndpointRouteBuilderExtensions
 StatusNamaa.StatusNamaaOptions
-StatusNamaa.StatusNamaaOptions.Add(string name, string format, System.Func<System.IServiceProvider, System.Threading.Tasks.Task<double>> handler) -> void
-StatusNamaa.StatusNamaaOptions.Metrics.get -> System.Collections.Generic.List<StatusNamaa.StatusNamaaOptionsItem>
 StatusNamaa.StatusNamaaOptions.Metrics.set -> void
 StatusNamaa.StatusNamaaOptions.StatusNamaaOptions() -> void
-StatusNamaa.StatusNamaaOptionsItem
-StatusNamaa.StatusNamaaOptionsItem.Format.get -> string
-StatusNamaa.StatusNamaaOptionsItem.Format.set -> void
-StatusNamaa.StatusNamaaOptionsItem.Handler.get -> System.Func<System.IServiceProvider, System.Threading.Tasks.Task<double>>
-StatusNamaa.StatusNamaaOptionsItem.Handler.set -> void
-StatusNamaa.StatusNamaaOptionsItem.Name.get -> string
-StatusNamaa.StatusNamaaOptionsItem.Name.set -> void
-StatusNamaa.StatusNamaaOptionsItem.StatusNamaaOptionsItem() -> void
