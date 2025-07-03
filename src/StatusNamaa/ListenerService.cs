@@ -23,9 +23,13 @@ internal sealed class ListenerService
             }
         };
 
+        _meterListener.SetMeasurementEventCallback<byte>(OnMeasurementRecorded);
         _meterListener.SetMeasurementEventCallback<int>(OnMeasurementRecorded);
-        _meterListener.SetMeasurementEventCallback<long>(OnMeasurementRecorded);
+        _meterListener.SetMeasurementEventCallback<float>(OnMeasurementRecorded);
         _meterListener.SetMeasurementEventCallback<double>(OnMeasurementRecorded);
+        _meterListener.SetMeasurementEventCallback<decimal>(OnMeasurementRecorded);
+        _meterListener.SetMeasurementEventCallback<short>(OnMeasurementRecorded);
+        _meterListener.SetMeasurementEventCallback<long>(OnMeasurementRecorded);
 
         _meterListener.Start();
     }
@@ -52,8 +56,7 @@ internal sealed class ListenerService
         return GetValue(metric);
     }
 
-    private void OnMeasurementRecorded(Instrument instrument, int measurement,
-        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
+    private void OnMeasurementRecorded(Instrument instrument, double measurement)
     {
         if (!_metricValues.TryAdd(instrument.Name, measurement))
         {
@@ -61,22 +64,46 @@ internal sealed class ListenerService
         }
     }
 
-    private void OnMeasurementRecorded(Instrument instrument, long measurement,
+    private void OnMeasurementRecorded(Instrument instrument, byte measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        if (!_metricValues.TryAdd(instrument.Name, measurement))
-        {
-            _metricValues[instrument.Name] += measurement;
-        }
+        OnMeasurementRecorded(instrument, measurement);
+    }
+
+    private void OnMeasurementRecorded(Instrument instrument, int measurement,
+        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
+    {
+        OnMeasurementRecorded(instrument, measurement);
+    }
+
+    private void OnMeasurementRecorded(Instrument instrument, float measurement,
+        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
+    {
+        OnMeasurementRecorded(instrument, measurement);
     }
 
     private void OnMeasurementRecorded(Instrument instrument, double measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        if (!_metricValues.TryAdd(instrument.Name, measurement))
-        {
-            _metricValues[instrument.Name] += measurement;
-        }
+        OnMeasurementRecorded(instrument, measurement);
+    }
+
+    private void OnMeasurementRecorded(Instrument instrument, decimal measurement,
+        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
+    {
+        OnMeasurementRecorded(instrument, (double)measurement);
+    }
+
+    private void OnMeasurementRecorded(Instrument instrument, short measurement,
+        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
+    {
+        OnMeasurementRecorded(instrument, measurement);
+    }
+
+    private void OnMeasurementRecorded(Instrument instrument, long measurement,
+        ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
+    {
+        OnMeasurementRecorded(instrument, measurement);
     }
 
     private static long GetValue(Metric metric)
