@@ -19,7 +19,7 @@ internal sealed class MetricDisplayService
 
         foreach (var metric in _options.Metrics)
         {
-            var value = await metric.Handler.Invoke(_serviceProvider);
+            var value = await metric.Selector.Invoke(_serviceProvider);
 
             metrics.Add(new MetricDisplayItem(metric.Name, value, metric.Format));
         }

@@ -28,7 +28,7 @@ public class Program
         builder.Services.AddSingleton<ListenerService>();
         builder.Services.AddStatusNamaa(o =>
         {
-            o.Add("My Custom Value", "{0}", async services =>
+            o.AddMetric("My Custom Value", "{0}", async services =>
             {
                 var listenerService = services.GetRequiredService<ListenerService>();
 
