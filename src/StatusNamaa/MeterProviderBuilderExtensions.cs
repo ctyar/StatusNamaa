@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Metrics;
 
 namespace StatusNamaa;
 
@@ -46,7 +47,18 @@ public static class MeterProviderBuilderExtensions
 
         services.AddSingleton<MetricDisplayService>();
         services.AddSingleton<SvgService>();
+        services.AddSingleton<ListenerService>();
 
         return services;
+    }
+
+    public static MeterProviderBuilder AddStatusNamaa(this MeterProviderBuilder builder)
+    {
+        var exportedMetrics = new List<Metric>();
+        builder.AddInMemoryExporter(exportedMetrics);
+
+        ListenerService.ExportedMetrics = exportedMetrics;
+
+        return builder;
     }
 }

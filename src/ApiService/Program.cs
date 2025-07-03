@@ -28,7 +28,17 @@ public class Program
         builder.Services.AddSingleton<ListenerService>();
         builder.Services.AddStatusNamaa(o =>
         {
-            o.AddMetric("My Custom Value", "{0}", async services =>
+            o.AddMetric("queue.length");
+
+            o.AddMetric("dotnet.exceptions");
+
+            o.AddMetric("My Custom Value", "{0}%", async services =>
+            {
+                var listenerService = services.GetRequiredService<ListenerService>();
+
+                return await listenerService.GetValue();
+            });
+            o.AddMetric("My Custom Value", async services =>
             {
                 var listenerService = services.GetRequiredService<ListenerService>();
 

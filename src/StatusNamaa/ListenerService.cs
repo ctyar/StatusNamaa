@@ -1,26 +1,23 @@
-﻿/*using System.Diagnostics.Metrics;
+﻿using System.Diagnostics.Metrics;
+using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
 
 namespace StatusNamaa;
 
 internal sealed class ListenerService
 {
-    public readonly List<Metric> _exportedMetrics;
-    private readonly string[] _instrumentNames;
+    public static List<Metric> ExportedMetrics { get; set; } = [];
 
     private readonly MeterListener _meterListener = new();
-    private readonly Dictionary<string, int> _metricValues = [];
-    private readonly Dictionary<string, long> _metricValuesLong = [];
-    private readonly Dictionary<string, double> _metricValuesDouble = [];
+    private readonly Dictionary<string, double> _metricValues = [];
 
-    public ListenerService(List<Metric> exportedMetrics, string[] instrumentNames)
+    public ListenerService(IOptions<StatusNamaaOptions> options)
     {
-        _exportedMetrics = exportedMetrics;
-        _instrumentNames = instrumentNames;
+        var instrumentNames = options.Value.Metrics.Select(m => m.Name).ToArray();
 
         _meterListener.InstrumentPublished = (instrument, listener) =>
         {
-            if (_instrumentNames.Contains(instrument.Name))
+            if (instrumentNames.Contains(instrument.Name))
             {
                 listener.EnableMeasurementEvents(instrument);
             }
@@ -33,34 +30,19 @@ internal sealed class ListenerService
         _meterListener.Start();
     }
 
-    public IEnumerable<long?> GetValues()
+    public void RecordObservableInstruments()
     {
         _meterListener.RecordObservableInstruments();
-
-        foreach (var instrumentName in _instrumentNames)
-        {
-            yield return GetValue(instrumentName);
-        }
     }
 
-    private long? GetValue(string metricName)
+    public double? GetValue(string metricName)
     {
         if (_metricValues.TryGetValue(metricName, out var value))
         {
             return value;
         }
 
-        if (_metricValuesLong.TryGetValue(metricName, out var valueLong))
-        {
-            return valueLong;
-        }
-
-        if (_metricValuesDouble.TryGetValue(metricName, out var valueDouble))
-        {
-            return (long)valueDouble;
-        }
-
-        var metric = _exportedMetrics.FirstOrDefault(i => i.Name == metricName);
+        var metric = ExportedMetrics.FirstOrDefault(i => i.Name == metricName);
 
         if (metric is null)
         {
@@ -82,18 +64,18 @@ internal sealed class ListenerService
     private void OnMeasurementRecorded(Instrument instrument, long measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        if (!_metricValuesLong.TryAdd(instrument.Name, measurement))
+        if (!_metricValues.TryAdd(instrument.Name, measurement))
         {
-            _metricValuesLong[instrument.Name] += measurement;
+            _metricValues[instrument.Name] += measurement;
         }
     }
 
     private void OnMeasurementRecorded(Instrument instrument, double measurement,
         ReadOnlySpan<KeyValuePair<string, object?>> tags, object? state)
     {
-        if (!_metricValuesDouble.TryAdd(instrument.Name, measurement))
+        if (!_metricValues.TryAdd(instrument.Name, measurement))
         {
-            _metricValuesDouble[instrument.Name] += measurement;
+            _metricValues[instrument.Name] += measurement;
         }
     }
 
@@ -117,4 +99,3 @@ internal sealed class ListenerService
         return sum;
     }
 }
-*/

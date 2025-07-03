@@ -78,7 +78,7 @@ internal sealed class SvgService
         {
             var color = Colors[i].Item2;
 
-            if (metric.Value.CompareTo(Colors[i].Item1) < 0)
+            if (metric.Value is null || metric.Value.Value.CompareTo(Colors[i].Item1) < 0)
             {
                 break;
             }
@@ -114,8 +114,13 @@ internal sealed class SvgService
         svgDoc.AppendLine("</svg>");
     }
 
-    private static string GetColor(double value)
+    private static string GetColor(double? value)
     {
+        if (value is null)
+        {
+            return Colors[0].Item2;
+        }
+
         foreach (var color in Colors)
         {
             if (value <= color.Item1)

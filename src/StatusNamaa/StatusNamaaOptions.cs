@@ -41,20 +41,16 @@ public class StatusNamaaOptions
         },
     ];
 
-
     /// <summary>
-    /// Adds a custom metric to the <see cref="Metrics"/> collection with the specified name, display format, and selector function.
+    /// Adds a custom metric to the <see cref="Metrics"/> collection with the specified name.
+    /// The default display format "{0}" will be used.
     /// </summary>
     /// <param name="name">The name of the metric to be displayed.</param>
-    /// <param name="format">The display format string for the metric value (e.g., "{0:F0}%").</param>
-    /// <param name="selector">A function that retrieves the metric value asynchronously, given an <see cref="IServiceProvider"/>.</param>
-    public void AddMetric(string name, string format, Func<IServiceProvider, Task<double>> selector)
+    public void AddMetric(string name)
     {
         Metrics.Add(new StatusNamaaMetric
         {
             Name = name,
-            Format = format,
-            Selector = selector
         });
     }
 
@@ -72,6 +68,22 @@ public class StatusNamaaOptions
             Selector = selector
         });
     }
+
+    /// <summary>
+    /// Adds a custom metric to the <see cref="Metrics"/> collection with the specified name, display format, and selector function.
+    /// </summary>
+    /// <param name="name">The name of the metric to be displayed.</param>
+    /// <param name="format">The display format string for the metric value (e.g., "{0:F0}%").</param>
+    /// <param name="selector">A function that retrieves the metric value asynchronously, given an <see cref="IServiceProvider"/>.</param>
+    public void AddMetric(string name, string format, Func<IServiceProvider, Task<double>> selector)
+    {
+        Metrics.Add(new StatusNamaaMetric
+        {
+            Name = name,
+            Format = format,
+            Selector = selector
+        });
+    }
 }
 
 /// <summary>
@@ -84,5 +96,5 @@ public class StatusNamaaMetric
 {
     public string Name { get; set; } = string.Empty;
     public string Format { get; set; } = "{0}";
-    public Func<IServiceProvider, Task<double>> Selector { get; set; } = null!;
+    public Func<IServiceProvider, Task<double>>? Selector { get; set; }
 }
