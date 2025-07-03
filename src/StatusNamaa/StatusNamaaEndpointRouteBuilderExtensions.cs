@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace StatusNamaa;
 
+/// <summary>
+/// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to register StatusNamaa endpoints.
+/// </summary>
 public static class StatusNamaaEndpointRouteBuilderExtensions
 {
     /// <summary>
