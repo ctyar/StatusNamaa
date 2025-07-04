@@ -24,11 +24,6 @@ internal sealed class SvgService
 
         AddHeader(svgDoc, metrics);
 
-#if DEBUG
-        metrics[0].Value = 100;
-        metrics[1].Value = 80.134;
-        metrics[2].Value = 25;
-#endif
         AddBody(svgDoc, metrics);
 
         AddFooter(svgDoc, metrics);
@@ -72,6 +67,11 @@ internal sealed class SvgService
 
     private static void AddMetricBars(StringBuilder svgDoc, MetricDisplayItem metric, int rowIndex)
     {
+        if (metric.Type != StatusNamaaValueType.Percentage)
+        {
+            return;
+        }
+
         svgDoc.AppendLine("<g>");
 
         for (var i = 0; i < Colors.Count; i++)
@@ -93,7 +93,7 @@ internal sealed class SvgService
     {
         svgDoc.AppendLine($"""
             <text x="{480 - 10}px" y="{84 + rowIndex * 24}px"
-             fill="{GetColor(metric.Value)}" text-anchor="end"> 
+             fill="{GetColor(metric.Value, metric.Type)}" text-anchor="end"> 
             """ +
             $"{metric.DisplayValue}</text>");
     }
@@ -114,9 +114,14 @@ internal sealed class SvgService
         svgDoc.AppendLine("</svg>");
     }
 
-    private static string GetColor(double? value)
+    private static string GetColor(double? value, StatusNamaaValueType type)
     {
         if (value is null)
+        {
+            return Colors[0].Item2;
+        }
+
+        if (type != StatusNamaaValueType.Percentage)
         {
             return Colors[0].Item2;
         }

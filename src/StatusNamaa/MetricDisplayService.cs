@@ -41,10 +41,64 @@ internal sealed class MetricDisplayService
             }
 
             var displayName = metric.DisplayName ?? metric.Name;
-            var displayValue = metric.Formatter(value);
-            metrics.Add(new MetricDisplayItem(displayName, value, displayValue));
+
+            string? displayValue;
+            if (metric.Formatter is not null)
+            {
+                displayValue = metric.Formatter(value);
+            }
+            else
+            {
+                displayValue = Format(value, metric.Type);
+            }
+
+            metrics.Add(new MetricDisplayItem(displayName, metric.Type, value, displayValue));
         }
 
+#if DEBUG
+        metrics[0].Value = 100;
+        metrics[0].DisplayValue = "100%";
+        metrics[1].Value = 70;
+        metrics[1].DisplayValue = "70%";
+        metrics[2].Value = 25;
+        metrics[2].DisplayValue = "25";
+#endif
+
         return metrics;
+    }
+
+    private static string? Format(double? value, StatusNamaaValueType type)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+
+        return type switch
+        {
+            StatusNamaaValueType.Bytes => FormatBytes(value.Value),
+            StatusNamaaValueType.Percentage => string.Format("{0:F0}%", value),
+            _ => value.Value.ToString()
+        };
+    }
+
+    private static string FormatBytes(double value)
+    {
+        if (value < 1024)
+        {
+            return $"{value:F0} B";
+        }
+        else if (value < 1024 * 1024)
+        {
+            return $"{value / 1024:F0} KB";
+        }
+        else if (value < 1024 * 1024 * 1024)
+        {
+            return $"{value / (1024 * 1024):F0} MB";
+        }
+        else
+        {
+            return $"{value / (1024 * 1024 * 1024):F0} GB";
+        }
     }
 }

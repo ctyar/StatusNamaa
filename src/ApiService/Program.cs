@@ -28,26 +28,11 @@ public class Program
         builder.Services.AddSingleton<ListenerService>();
         builder.Services.AddStatusNamaa(o =>
         {
-            o.AddMetric("queue.length");
-
-            o.AddMetric("dotnet.exceptions");
-
             o.Metrics.Add(new StatusNamaaMetric
             {
                 Name = "dotnet.process.memory.working_set",
                 DisplayName = "Working Set",
-                Formatter = value =>
-                {
-                    value = value / 1024 / 1024;
-                    if (value < 1024)
-                    {
-                        return $"{value:F0} MB";
-                    }
-                    else
-                    {
-                        return $"{value / 1024:F0} GB";
-                    }
-                }
+                Type = StatusNamaaValueType.Bytes,
             });
 
             o.AddMetric("My Custom Value", async services =>
@@ -56,6 +41,10 @@ public class Program
 
                 return await listenerService.GetValue();
             });
+
+            o.AddMetric("queue.length");
+
+            o.AddMetric("dotnet.exceptions");
         });
 
         var app = builder.Build();

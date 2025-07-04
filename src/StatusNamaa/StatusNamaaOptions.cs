@@ -18,19 +18,19 @@ public class StatusNamaaOptions
         new StatusNamaaMetric
         {
             Name = "CPU",
-            Formatter = value => string.Format("{0:F0}%", value),
+            Type = StatusNamaaValueType.Percentage,
             Selector = services => MetricService.GetCpuUsageAsync(),
         },
         new StatusNamaaMetric
         {
             Name = "Memory",
-            Formatter = value => string.Format("{0:F0}%", value),
+            Type = StatusNamaaValueType.Percentage,
             Selector = services => Task.FromResult(MetricService.GetMemoryUsage()),
         },
         new StatusNamaaMetric
         {
             Name = "dotnet.thread_pool.queue.length",
-            DisplayName = "Thread Pool Queue",
+            DisplayName = "ThreadPool Queue",
             Formatter = value => value.ToString(),
             Selector = services => Task.FromResult((double)MetricService.GetThreadPoolQueueLength()),
         },
@@ -115,6 +115,14 @@ public class StatusNamaaMetric
 {
     public string Name { get; set; } = string.Empty;
     public string? DisplayName { get; set; }
-    public Func<double?, string?> Formatter { get; set; } = value => value?.ToString();
+    public StatusNamaaValueType Type { get; set; } = StatusNamaaValueType.Default;
+    public Func<double?, string?>? Formatter { get; set; }
     public Func<IServiceProvider, Task<double>>? Selector { get; set; }
+}
+
+public enum StatusNamaaValueType
+{
+    Default,
+    Percentage,
+    Bytes,
 }
