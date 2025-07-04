@@ -95,7 +95,7 @@ internal sealed class SvgService
             <text x="{480 - 10}px" y="{84 + rowIndex * 24}px"
              fill="{GetColor(metric.Value)}" text-anchor="end"> 
             """ +
-            $"{string.Format(metric.Format, metric.Value)}</text>");
+            $"{metric.DisplayValue}</text>");
     }
 
     private static void AddFooter(StringBuilder svgDoc, List<MetricDisplayItem> metrics)

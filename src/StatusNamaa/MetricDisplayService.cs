@@ -40,7 +40,9 @@ internal sealed class MetricDisplayService
                 value = _listenerService.GetValue(metric.Name);
             }
 
-            metrics.Add(new MetricDisplayItem(metric.Name, value, metric.Format));
+            var displayName = metric.DisplayName ?? metric.Name;
+            var displayValue = metric.Formatter(value);
+            metrics.Add(new MetricDisplayItem(displayName, value, displayValue));
         }
 
         return metrics;

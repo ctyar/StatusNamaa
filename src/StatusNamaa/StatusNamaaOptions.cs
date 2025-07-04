@@ -18,25 +18,26 @@ public class StatusNamaaOptions
         new StatusNamaaMetric
         {
             Name = "CPU",
-            Format = "{0:F0}%",
+            Formatter = value => string.Format("{0:F0}%", value),
             Selector = services => MetricService.GetCpuUsageAsync(),
         },
         new StatusNamaaMetric
         {
             Name = "Memory",
-            Format = "{0:F0}%",
+            Formatter = value => string.Format("{0:F0}%", value),
             Selector = services => Task.FromResult(MetricService.GetMemoryUsage()),
         },
         new StatusNamaaMetric
         {
-            Name = "ThreadPool Queue",
-            Format = "{0}",
+            Name = "dotnet.thread_pool.queue.length",
+            DisplayName = "Thread Pool Queue",
+            Formatter = value => value.ToString(),
             Selector = services => Task.FromResult((double)MetricService.GetThreadPoolQueueLength()),
         },
         new StatusNamaaMetric
         {
             Name = "Lock Contentions",
-            Format = "{0}",
+            Formatter = value => value.ToString(),
             Selector = services => Task.FromResult((double)MetricService.GetLockContentions()),
         },
     ];
@@ -73,14 +74,32 @@ public class StatusNamaaOptions
     /// Adds a custom metric to the <see cref="Metrics"/> collection with the specified name, display format, and selector function.
     /// </summary>
     /// <param name="name">The name of the metric to be displayed.</param>
-    /// <param name="format">The display format string for the metric value (e.g., "{0:F0}%").</param>
+    /// <param name="formatter">The display format string for the metric value (e.g., "{0:F0}%").</param>
     /// <param name="selector">A function that retrieves the metric value asynchronously, given an <see cref="IServiceProvider"/>.</param>
-    public void AddMetric(string name, string format, Func<IServiceProvider, Task<double>> selector)
+    public void AddMetric(string name, Func<double?, string?> formatter, Func<IServiceProvider, Task<double>> selector)
     {
         Metrics.Add(new StatusNamaaMetric
         {
             Name = name,
-            Format = format,
+            Formatter = formatter,
+            Selector = selector
+        });
+    }
+
+    /// <summary>
+    /// Adds a custom metric to the <see cref="Metrics"/> collection with the specified name, display name, display format, and selector function.
+    /// </summary>
+    /// <param name="name">The internal name of the metric to be used for identification.</param>
+    /// <param name="displayName">The display name of the metric to be shown in the UI or reports.</param>
+    /// <param name="formatter">The display format string for the metric value (e.g., "{0:F0}%").</param>
+    /// <param name="selector">A function that retrieves the metric value asynchronously, given an <see cref="IServiceProvider"/>.</param>
+    public void AddMetric(string name, string displayName, Func<double?, string?> formatter, Func<IServiceProvider, Task<double>> selector)
+    {
+        Metrics.Add(new StatusNamaaMetric
+        {
+            Name = name,
+            DisplayName = displayName,
+            Formatter = formatter,
             Selector = selector
         });
     }
@@ -89,12 +108,13 @@ public class StatusNamaaOptions
 /// <summary>
 /// Represents a single metric definition for StatusNamaa, including its name, display format, and a selector function
 /// that retrieves the metric value asynchronously. The <see cref="Name"/> property specifies the display name of the metric,
-/// <see cref="Format"/> defines how the metric value will be formatted for display, and <see cref="Selector"/> is a function
+/// <see cref="Formatter"/> defines how the metric value will be formatted for display, and <see cref="Selector"/> is a function
 /// that, given an <see cref="IServiceProvider"/>, returns the metric value as a <see cref="Task{Double}"/>.
 /// </summary>
 public class StatusNamaaMetric
 {
     public string Name { get; set; } = string.Empty;
-    public string Format { get; set; } = "{0}";
+    public string? DisplayName { get; set; }
+    public Func<double?, string?> Formatter { get; set; } = value => value?.ToString();
     public Func<IServiceProvider, Task<double>>? Selector { get; set; }
 }

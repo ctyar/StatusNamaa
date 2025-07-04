@@ -32,12 +32,24 @@ public class Program
 
             o.AddMetric("dotnet.exceptions");
 
-            o.AddMetric("My Custom Value", "{0}%", async services =>
+            o.Metrics.Add(new StatusNamaaMetric
             {
-                var listenerService = services.GetRequiredService<ListenerService>();
-
-                return await listenerService.GetValue();
+                Name = "dotnet.process.memory.working_set",
+                DisplayName = "Working Set",
+                Formatter = value =>
+                {
+                    value = value / 1024 / 1024;
+                    if (value < 1024)
+                    {
+                        return $"{value:F0} MB";
+                    }
+                    else
+                    {
+                        return $"{value / 1024:F0} GB";
+                    }
+                }
             });
+
             o.AddMetric("My Custom Value", async services =>
             {
                 var listenerService = services.GetRequiredService<ListenerService>();
