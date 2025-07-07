@@ -18,12 +18,7 @@ public static class MeterProviderBuilderExtensions
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is <c>null</c>.</exception>
     public static IServiceCollection AddStatusNamaa(this IServiceCollection services)
     {
-        ArgumentNullException.ThrowIfNull(services);
-
-        services.AddSingleton<MetricDisplayService>();
-        services.AddSingleton<SvgService>();
-
-        return services;
+        return AddStatusNamaa(services, _ => { });
     }
 
     /// <summary>
