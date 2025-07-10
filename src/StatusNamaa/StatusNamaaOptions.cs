@@ -58,7 +58,7 @@ public class StatusNamaaOptions
     /// </summary>
     /// <param name="name">The name of the metric to be displayed.</param>
     /// <param name="selector">A function that retrieves the metric value asynchronously, given an <see cref="IServiceProvider"/>.</param>
-    public void AddMetric(string name, Func<IServiceProvider, Task<double>> selector)
+    public void AddMetric(string name, Func<IServiceProvider, Task<double?>> selector)
     {
         Metrics.Add(new StatusNamaaMetric
         {
@@ -73,7 +73,7 @@ public class StatusNamaaOptions
     /// <param name="name">The name of the metric to be displayed.</param>
     /// <param name="formatter">The display format string for the metric value (e.g., "{0:F0}%").</param>
     /// <param name="selector">A function that retrieves the metric value asynchronously, given an <see cref="IServiceProvider"/>.</param>
-    public void AddMetric(string name, Func<double?, string?> formatter, Func<IServiceProvider, Task<double>> selector)
+    public void AddMetric(string name, Func<double?, string?> formatter, Func<IServiceProvider, Task<double?>> selector)
     {
         Metrics.Add(new StatusNamaaMetric
         {
@@ -90,7 +90,7 @@ public class StatusNamaaOptions
     /// <param name="displayName">The display name of the metric to be shown in the UI or reports.</param>
     /// <param name="formatter">The display format string for the metric value (e.g., "{0:F0}%").</param>
     /// <param name="selector">A function that retrieves the metric value asynchronously, given an <see cref="IServiceProvider"/>.</param>
-    public void AddMetric(string name, string displayName, Func<double?, string?> formatter, Func<IServiceProvider, Task<double>> selector)
+    public void AddMetric(string name, string displayName, Func<double?, string?> formatter, Func<IServiceProvider, Task<double?>> selector)
     {
         Metrics.Add(new StatusNamaaMetric
         {
@@ -114,7 +114,7 @@ public class StatusNamaaMetric
     public string? DisplayName { get; set; }
     public StatusNamaaValueType Type { get; set; } = StatusNamaaValueType.Default;
     public Func<double?, string?>? Formatter { get; set; }
-    public Func<IServiceProvider, Task<double>>? Selector { get; set; }
+    public Func<IServiceProvider, Task<double?>>? Selector { get; set; }
 }
 
 public enum StatusNamaaValueType

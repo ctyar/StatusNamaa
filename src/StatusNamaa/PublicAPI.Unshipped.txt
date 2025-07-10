@@ -1,1 +1,5 @@
 ﻿#nullable enable
+StatusNamaa.StatusNamaaMetric.Selector.get -> System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double?>!>?
+StatusNamaa.StatusNamaaOptions.AddMetric(string! name, string! displayName, System.Func<double?, string?>! formatter, System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double?>!>! selector) -> void
+StatusNamaa.StatusNamaaOptions.AddMetric(string! name, System.Func<double?, string?>! formatter, System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double?>!>! selector) -> void
+StatusNamaa.StatusNamaaOptions.AddMetric(string! name, System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double?>!>! selector) -> void

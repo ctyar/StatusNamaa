@@ -16,15 +16,11 @@ StatusNamaa.StatusNamaaMetric.Formatter.get -> System.Func<double?, string?>?
 StatusNamaa.StatusNamaaMetric.Formatter.set -> void
 StatusNamaa.StatusNamaaMetric.Name.get -> string!
 StatusNamaa.StatusNamaaMetric.Name.set -> void
-StatusNamaa.StatusNamaaMetric.Selector.get -> System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double>!>?
 StatusNamaa.StatusNamaaMetric.Selector.set -> void
 StatusNamaa.StatusNamaaMetric.StatusNamaaMetric() -> void
 StatusNamaa.StatusNamaaMetric.Type.get -> StatusNamaa.StatusNamaaValueType
 StatusNamaa.StatusNamaaMetric.Type.set -> void
 StatusNamaa.StatusNamaaOptions.AddMetric(string! name) -> void
-StatusNamaa.StatusNamaaOptions.AddMetric(string! name, string! displayName, System.Func<double?, string?>! formatter, System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double>!>! selector) -> void
-StatusNamaa.StatusNamaaOptions.AddMetric(string! name, System.Func<double?, string?>! formatter, System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double>!>! selector) -> void
-StatusNamaa.StatusNamaaOptions.AddMetric(string! name, System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double>!>! selector) -> void
 StatusNamaa.StatusNamaaOptions.Metrics.get -> System.Collections.Generic.List<StatusNamaa.StatusNamaaMetric!>!
 StatusNamaa.StatusNamaaValueType
 StatusNamaa.StatusNamaaValueType.Bytes = 2 -> StatusNamaa.StatusNamaaValueType

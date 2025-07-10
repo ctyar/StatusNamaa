@@ -4,7 +4,7 @@ namespace StatusNamaa;
 
 internal sealed class MetricService
 {
-    public static async Task<double> GetCpuUsageAsync()
+    public static async Task<double?> GetCpuUsageAsync()
     {
         const int delay = 100;
         // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/Metrics/RuntimeMetrics.cs#L179
@@ -19,7 +19,7 @@ internal sealed class MetricService
         return percentage > 100 ? 100 : percentage;
     }
 
-    public static double GetMemoryUsage()
+    public static double? GetMemoryUsage()
     {
         // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/Metrics/RuntimeMetrics.cs#L40
         var memoryUsage = (double)Environment.WorkingSet * 100 / GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
