@@ -26,7 +26,7 @@ public class Program
 
         builder.Services.AddSingleton<QueueLengthMetric>();
         builder.Services.AddSingleton<ListenerService>();
-        builder.Services.AddStatusNamaa(o =>
+        builder.Services.AddStatusNamaa(/*o =>
         {
             o.Metrics.Add(new StatusNamaaMetric
             {
@@ -45,7 +45,7 @@ public class Program
             o.AddMetric("queue.length");
 
             o.AddMetric("dotnet.exceptions");
-        });
+        }*/);
 
         var app = builder.Build();
 

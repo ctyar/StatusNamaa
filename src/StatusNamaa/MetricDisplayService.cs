@@ -55,14 +55,14 @@ internal sealed class MetricDisplayService
             metrics.Add(new MetricDisplayItem(displayName, metric.Type, value, displayValue));
         }
 
-#if DEBUG
-        metrics[0].Value = 100;
-        metrics[0].DisplayValue = "100%";
-        metrics[1].Value = 70;
-        metrics[1].DisplayValue = "70%";
-        metrics[2].Value = 25;
-        metrics[2].DisplayValue = "25";
-#endif
+        /*#if DEBUG
+                metrics[0].Value = 100;
+                metrics[0].DisplayValue = "100%";
+                metrics[1].Value = 70;
+                metrics[1].DisplayValue = "70%";
+                metrics[2].Value = 25;
+                metrics[2].DisplayValue = "25";
+        #endif*/
 
         return metrics;
     }
