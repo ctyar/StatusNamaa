@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Microsoft.AspNetCore.Hosting;
 
 namespace StatusNamaa;
 
@@ -17,6 +18,13 @@ internal sealed class SvgService
         new(80, "#fc3e21"),
         new(90, "#f30b0b"),
     ];
+
+    private readonly IWebHostEnvironment _webHostEnvironment;
+
+    public SvgService(IWebHostEnvironment webHostEnvironment)
+    {
+        _webHostEnvironment = webHostEnvironment;
+    }
 
     public string GetSvg(List<MetricDisplayItem> metrics)
     {
@@ -98,9 +106,9 @@ internal sealed class SvgService
             $"{metric.DisplayValue}</text>");
     }
 
-    private static void AddFooter(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
+    private void AddFooter(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
     {
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        var environment = _webHostEnvironment.EnvironmentName;
         var version = MetricService.GetVersion();
 
         svgDoc.AppendLine($"""
