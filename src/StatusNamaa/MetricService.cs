@@ -29,8 +29,8 @@ internal sealed class MetricService
 
     public static string? GetVersion()
     {
-        return Assembly.GetExecutingAssembly()
-            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+        return Assembly.GetEntryAssembly()
+            ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion;
     }
 }
