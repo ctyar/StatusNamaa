@@ -43,7 +43,10 @@ internal sealed class SvgService
     {
         var height = 36 + 10 + ((metrics.Count + 2) * 24) + 10;
         svgDoc.AppendLine($"""
-            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="480px" height="{height}px" viewBox="0 0 480 {height}">
+            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="{height}px" viewBox="0 0 470 {height}">
+                <clipPath id="clip1">
+                    <rect x="10px" y="10px" width="180px" height="{84 + (metrics.Count) * 24}px"/>
+                </clipPath>
             <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
             """);
     }
@@ -75,7 +78,7 @@ internal sealed class SvgService
 
     private static void AddMetricName(StringBuilder svgDoc, MetricDisplayItem metric, int rowIndex)
     {
-        svgDoc.AppendLine($"""<text x="10px" y="{84 + rowIndex * 24}px" fill="#53b1fd">{Truncate(metric.Name)}</text>""");
+        svgDoc.AppendLine($"""<g clip-path="url(#clip1)"><text x="10px" y="{84 + rowIndex * 24}px" fill="#53b1fd">{Truncate(metric.Name)}</text></g>""");
     }
 
     private static void AddMetricBars(StringBuilder svgDoc, MetricDisplayItem metric, int rowIndex)
@@ -96,7 +99,7 @@ internal sealed class SvgService
                 break;
             }
 
-            svgDoc.AppendLine($"""<rect x="{10 + (17 * 12) + 20 * i}px" y="{(60 + 24 - 16) + rowIndex * 24}px" width="16px" height="16px" rx="2px" fill="{color}"/>""");
+            svgDoc.AppendLine($"""<rect x="{10 + (190) + 20 * i}px" y="{(60 + 24 - 16) + rowIndex * 24}px" width="16px" height="16px" rx="2px" fill="{color}"/>""");
         }
 
         svgDoc.AppendLine("</g>");
@@ -105,7 +108,7 @@ internal sealed class SvgService
     private static void AddMetricValue(StringBuilder svgDoc, MetricDisplayItem metric, int rowIndex)
     {
         svgDoc.AppendLine($"""
-            <text x="{480 - 10}px" y="{84 + rowIndex * 24}px" fill="{GetColor(metric.Value, metric.Type)}" text-anchor="end">{metric.DisplayValue}</text>
+            <text x="{470 - 10}px" y="{84 + rowIndex * 24}px" fill="{GetColor(metric.Value, metric.Type)}" text-anchor="end">{metric.DisplayValue}</text>
             """);
     }
 
