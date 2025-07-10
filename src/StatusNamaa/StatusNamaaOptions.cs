@@ -31,14 +31,11 @@ public class StatusNamaaOptions
         {
             Name = "dotnet.thread_pool.queue.length",
             DisplayName = "ThreadPool Queue",
-            Formatter = value => value.ToString(),
-            Selector = services => Task.FromResult((double)MetricService.GetThreadPoolQueueLength()),
         },
         new StatusNamaaMetric
         {
-            Name = "Lock Contentions",
-            Formatter = value => value.ToString(),
-            Selector = services => Task.FromResult((double)MetricService.GetLockContentions()),
+            Name = "dotnet.monitor.lock_contentions",
+            DisplayName = "Lock Contentions",
         },
     ];
 

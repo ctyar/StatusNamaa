@@ -27,25 +27,6 @@ internal sealed class MetricService
         return memoryUsage;
     }
 
-    public static long GetThreadPoolQueueLength()
-    {
-        // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/Metrics/RuntimeMetrics.cs#L112
-        return ThreadPool.PendingWorkItemCount;
-    }
-
-    public static long GetLockContentions()
-    {
-        // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/Metrics/RuntimeMetrics.cs#L94
-        return Monitor.LockContentionCount;
-    }
-
-    public static long GetExceptionCount()
-    {
-        // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/Metrics/RuntimeMetrics.cs#L129
-        // TODO: Read the metric dotnet.exceptions
-        throw new NotImplementedException();
-    }
-
     public static string? GetVersion()
     {
         return Assembly.GetExecutingAssembly()
