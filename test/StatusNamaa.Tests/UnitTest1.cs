@@ -61,15 +61,15 @@ public class UnitTest1
         {
             o.Metrics[0].Selector = services =>
             {
-                return Task.FromResult((double?)100D);
+                return Task.FromResult((double?)100);
             };
             o.Metrics[1].Selector = services =>
             {
-                return Task.FromResult((double?)70D);
+                return Task.FromResult((double?)70);
             };
             o.Metrics[2].Selector = services =>
             {
-                return Task.FromResult((double?)25D);
+                return Task.FromResult((double?)25);
             };
             o.Metrics[3].Selector = services =>
             {
@@ -102,6 +102,127 @@ public class UnitTest1
         builder.Services.AddStatusNamaa(o =>
         {
             o.Metrics.Clear();
+        });
+
+        var app = builder.Build();
+        app.MapStatusNamaa();
+
+        app.Start();
+        var client = app.GetTestClient();
+
+        var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task MetricWithEmptyName()
+    {
+        var expected = """
+            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="480px" height="128px" viewBox="0 0 480 128">
+            <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
+            <g font-size="24px" font-weight="400">
+            <g>
+            <text x="10px" y="84px" fill="#53b1fd"></text>
+            <text x="470px" y="84px" fill="#b0fd6a" text-anchor="end">123</text>
+            </g>
+            </g>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">0.6.0-alpha.3+1730f5cec3</tspan></text>
+            </svg>
+            """;
+        var builder = WebApplication.CreateSlimBuilder();
+        builder.WebHost.UseTestServer();
+        builder.Services.AddStatusNamaa(o =>
+        {
+            o.Metrics.Clear();
+            o.Metrics.Add(new StatusNamaaMetric
+            {
+                DisplayName = null,
+                Selector = services =>
+                {
+                    return Task.FromResult((double?)123);
+                }
+            });
+        });
+
+        var app = builder.Build();
+        app.MapStatusNamaa();
+
+        app.Start();
+        var client = app.GetTestClient();
+
+        var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task MetricWithLowValue()
+    {
+        var expected = """
+            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="480px" height="128px" viewBox="0 0 480 128">
+            <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
+            <g font-size="24px" font-weight="400">
+            <g>
+            <text x="10px" y="84px" fill="#53b1fd"></text>
+            <text x="470px" y="84px" fill="#b0fd6a" text-anchor="end">-1</text>
+            </g>
+            </g>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">0.6.0-alpha.3+1730f5cec3</tspan></text>
+            </svg>
+            """;
+        var builder = WebApplication.CreateSlimBuilder();
+        builder.WebHost.UseTestServer();
+        builder.Services.AddStatusNamaa(o =>
+        {
+            o.Metrics.Clear();
+            o.Metrics.Add(new StatusNamaaMetric
+            {
+                Selector = services =>
+                {
+                    return Task.FromResult((double?)-1);
+                }
+            });
+        });
+
+        var app = builder.Build();
+        app.MapStatusNamaa();
+
+        app.Start();
+        var client = app.GetTestClient();
+
+        var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task MetricWithLongName()
+    {
+        var expected = """
+            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="480px" height="128px" viewBox="0 0 480 128">
+            <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
+            <g font-size="24px" font-weight="400">
+            <g>
+            <text x="10px" y="84px" fill="#53b1fd"></text>
+            <text x="470px" y="84px" fill="#b0fd6a" text-anchor="end">-1</text>
+            </g>
+            </g>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">0.6.0-alpha.3+1730f5cec3</tspan></text>
+            </svg>
+            """;
+        var builder = WebApplication.CreateSlimBuilder();
+        builder.WebHost.UseTestServer();
+        builder.Services.AddStatusNamaa(o =>
+        {
+            o.Metrics.Clear();
+            o.Metrics.Add(new StatusNamaaMetric
+            {
+                Selector = services =>
+                {
+                    return Task.FromResult((double?)-1);
+                }
+            });
         });
 
         var app = builder.Build();
