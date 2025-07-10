@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiService\ApiService.csproj" />
+    <PackageReference Include="Aspire.Hosting.AppHost" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <ProjectReference Include="..\Api\Api.csproj" />
   </ItemGroup>
 
 </Project>
