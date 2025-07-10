@@ -34,12 +34,23 @@ builder.Services.AddStatusNamaa(o =>
     // Clear default metrics
     o.Metrics.Clear();
 
-    // Add a custom metric
-    p.Add("My Custom Value", "{0}", services =>
-    {
-        var myService = services.GetRequiredService<MyService>();
+    // Add a .NET built-in metric
+    o.AddMetric("dotnet.exceptions");
 
-        return myService.GetValue();
+    // Add a .NET built-in metric with custom display name and type
+    o.Metrics.Add(new StatusNamaaMetric
+    {
+        Name = "dotnet.process.memory.working_set",
+        DisplayName = "Working Set",
+        Type = StatusNamaaValueType.Bytes,
+    });
+
+    // Add a custom value
+    o.AddMetric("My Custom Value", async services =>
+    {
+        var listenerService = services.GetRequiredService<ListenerService>();
+
+        return await listenerService.GetValue();
     });
 });
 ```
