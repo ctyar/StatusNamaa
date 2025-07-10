@@ -50,6 +50,11 @@ internal sealed class SvgService
 
     private static void AddBody(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
     {
+        if (metrics.Count == 0)
+        {
+            return;
+        }
+
         svgDoc.AppendLine("""<g font-size="24px" font-weight="400">""");
 
         for (var i = 0; i < metrics.Count; i++)
@@ -100,10 +105,8 @@ internal sealed class SvgService
     private static void AddMetricValue(StringBuilder svgDoc, MetricDisplayItem metric, int rowIndex)
     {
         svgDoc.AppendLine($"""
-            <text x="{480 - 10}px" y="{84 + rowIndex * 24}px"
-             fill="{GetColor(metric.Value, metric.Type)}" text-anchor="end"> 
-            """ +
-            $"{metric.DisplayValue}</text>");
+            <text x="{480 - 10}px" y="{84 + rowIndex * 24}px" fill="{GetColor(metric.Value, metric.Type)}" text-anchor="end">{metric.DisplayValue}</text>
+            """);
     }
 
     private void AddFooter(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
@@ -112,14 +115,10 @@ internal sealed class SvgService
         var version = MetricService.GetVersion();
 
         svgDoc.AppendLine($"""
-            <text x="10px" y="{84 + (metrics.Count) * 24}px" fill="#53b1fd" font-size="10px">Environment: 
-                <tspan fill="{Colors[0].Item2}">{environment}</tspan>
-                 Version: 
-                <tspan fill="{Colors[0].Item2}">{version}</tspan>
-            </text>
+            <text x="10px" y="{84 + (metrics.Count) * 24}px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="{Colors[0].Item2}">{environment}</tspan>  Version: <tspan fill="{Colors[0].Item2}">{version}</tspan></text>
             """);
 
-        svgDoc.AppendLine("</svg>");
+        svgDoc.Append("</svg>");
     }
 
     private static string GetColor(double? value, StatusNamaaValueType type)
