@@ -42,7 +42,7 @@ public static class MeterProviderBuilderExtensions
 
         services.AddSingleton<MetricDisplayService>();
         services.AddSingleton<SvgService>();
-        services.AddSingleton<ListenerService>();
+        services.AddSingleton<IListenerService, ListenerService>();
 
         return services;
     }
@@ -52,7 +52,7 @@ public static class MeterProviderBuilderExtensions
         var exportedMetrics = new List<Metric>();
         builder.AddInMemoryExporter(exportedMetrics);
 
-        ListenerService.ExportedMetrics = exportedMetrics;
+        OpenTelemetryInMemoryExporter.ExportedMetrics = exportedMetrics;
 
         return builder;
     }

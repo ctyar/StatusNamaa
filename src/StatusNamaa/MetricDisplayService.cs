@@ -6,10 +6,10 @@ internal sealed class MetricDisplayService
 {
     private readonly StatusNamaaOptions _options;
     private readonly IServiceProvider _serviceProvider;
-    private readonly ListenerService _listenerService;
+    private readonly IListenerService _listenerService;
 
     public MetricDisplayService(IOptions<StatusNamaaOptions> options, IServiceProvider serviceProvider,
-        ListenerService listenerService)
+        IListenerService listenerService)
     {
         _options = options.Value;
         _serviceProvider = serviceProvider;

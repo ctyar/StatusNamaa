@@ -4,10 +4,8 @@ using OpenTelemetry.Metrics;
 
 namespace StatusNamaa;
 
-internal sealed class ListenerService
+internal sealed class ListenerService : IListenerService
 {
-    public static List<Metric> ExportedMetrics { get; set; } = [];
-
     private readonly MeterListener _meterListener = new();
     private readonly Dictionary<string, double> _metricValues = [];
 
@@ -46,7 +44,7 @@ internal sealed class ListenerService
             return value;
         }
 
-        var metric = ExportedMetrics.FirstOrDefault(i => i.Name == metricName);
+        var metric = OpenTelemetryInMemoryExporter.ExportedMetrics.FirstOrDefault(i => i.Name == metricName);
 
         if (metric is null)
         {
