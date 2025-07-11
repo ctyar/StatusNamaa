@@ -42,12 +42,12 @@ public class StatusNamaaOptions
         new StatusNamaaMetric
         {
             Name = "dotnet.thread_pool.queue.length",
-            DisplayName = "ThreadPool Queue",
+            DisplayName = "ThreadPool",
         },
         new StatusNamaaMetric
         {
             Name = "dotnet.monitor.lock_contentions",
-            DisplayName = "Lock Contentions",
+            DisplayName = "Lock Contention",
         },
     ];
 
