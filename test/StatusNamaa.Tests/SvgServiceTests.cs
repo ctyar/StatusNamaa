@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StatusNamaa.Tests.Mocks;
 
 namespace StatusNamaa.Tests;
 
-public class StatusNamaaTests
+public class SvgServiceTests
 {
     [Fact]
     public async Task DefaultOptionTest()
