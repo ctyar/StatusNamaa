@@ -48,11 +48,11 @@ public class StatusNamaaTests
             <text x="460px" y="108px" fill="#fc9832" text-anchor="end">70%</text>
             </g>
             <g>
-            <g clip-path="url(#clip1)"><text x="10px" y="132px" fill="#53b1fd">ThreadPool Queue</text></g>
+            <g clip-path="url(#clip1)"><text x="10px" y="132px" fill="#53b1fd">ThreadPool</text></g>
             <text x="460px" y="132px" fill="#b0fd6a" text-anchor="end">5</text>
             </g>
             <g>
-            <g clip-path="url(#clip1)"><text x="10px" y="156px" fill="#53b1fd">Lock Contentions</text></g>
+            <g clip-path="url(#clip1)"><text x="10px" y="156px" fill="#53b1fd">Lock Contention</text></g>
             <text x="460px" y="156px" fill="#b0fd6a" text-anchor="end">5</text>
             </g>
             </g>
@@ -188,6 +188,101 @@ public class StatusNamaaTests
                 Selector = services =>
                 {
                     return Task.FromResult<double?>(-1);
+                }
+            });
+        });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
+
+        var app = builder.Build();
+        app.MapStatusNamaa();
+
+        app.Start();
+        var client = app.GetTestClient();
+
+        var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task MetricWithNullValue()
+    {
+        var expected = """
+            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
+            <clipPath id="clip1">
+            <rect x="10px" y="10px" width="180px" height="108px"/>
+            </clipPath>
+            <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
+            <g font-size="24px" font-weight="400">
+            <g>
+            <g clip-path="url(#clip1)"><text x="10px" y="84px" fill="#53b1fd">Metric</text></g>
+            <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end"></text>
+            </g>
+            </g>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
+            </svg>
+            """;
+        expected = expected.Replace("\r\n", Environment.NewLine);
+
+        var builder = WebApplication.CreateSlimBuilder();
+        builder.WebHost.UseTestServer();
+        builder.Services.AddStatusNamaa(o =>
+        {
+            o.Metrics.Clear();
+            o.Metrics.Add(new StatusNamaaMetric
+            {
+                Name = "Metric",
+                Selector = services =>
+                {
+                    return Task.FromResult<double?>(null);
+                }
+            });
+        });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
+
+        var app = builder.Build();
+        app.MapStatusNamaa();
+
+        app.Start();
+        var client = app.GetTestClient();
+
+        var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task MetricWithPercentageNullValue()
+    {
+        var expected = """
+            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
+            <clipPath id="clip1">
+            <rect x="10px" y="10px" width="180px" height="108px"/>
+            </clipPath>
+            <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
+            <g font-size="24px" font-weight="400">
+            <g>
+            <g clip-path="url(#clip1)"><text x="10px" y="84px" fill="#53b1fd">Metric</text></g>
+            <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end"></text>
+            </g>
+            </g>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
+            </svg>
+            """;
+        expected = expected.Replace("\r\n", Environment.NewLine);
+
+        var builder = WebApplication.CreateSlimBuilder();
+        builder.WebHost.UseTestServer();
+        builder.Services.AddStatusNamaa(o =>
+        {
+            o.Metrics.Clear();
+            o.Metrics.Add(new StatusNamaaMetric
+            {
+                Name = "Metric",
+                Type = StatusNamaaValueType.Percentage,
+                Selector = services =>
+                {
+                    return Task.FromResult<double?>(null);
                 }
             });
         });

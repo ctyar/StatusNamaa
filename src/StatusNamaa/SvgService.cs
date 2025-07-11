@@ -93,16 +93,21 @@ internal sealed class SvgService
             return;
         }
 
+        if (metric.Value is null)
+        {
+            return;
+        }
+
         svgDoc.AppendLine("<g>");
 
         for (var i = 0; i < Colors.Count; i++)
         {
-            var color = Colors[i].Item2;
-
-            if (metric.Value is null || metric.Value.Value.CompareTo(Colors[i].Item1) < 0)
+            if (metric.Value.Value.CompareTo(Colors[i].Item1) < 0)
             {
                 break;
             }
+
+            var color = Colors[i].Item2;
 
             svgDoc.AppendLine($"""<rect x="{10 + (190) + 20 * i}px" y="{(60 + 24 - 16) + rowIndex * 24}px" width="16px" height="16px" rx="2px" fill="{color}"/>""");
         }
