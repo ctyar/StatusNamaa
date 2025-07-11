@@ -13,7 +13,7 @@ public class StatusNamaaTests
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="200px" viewBox="0 0 470 200">
             <clipPath id="clip1">
-                <rect x="10px" y="10px" width="180px" height="180px"/>
+            <rect x="10px" y="10px" width="180px" height="180px"/>
             </clipPath>
             <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
             <g font-size="24px" font-weight="400">
@@ -84,7 +84,7 @@ public class StatusNamaaTests
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="104px" viewBox="0 0 470 104">
             <clipPath id="clip1">
-                <rect x="10px" y="10px" width="180px" height="84px"/>
+            <rect x="10px" y="10px" width="180px" height="84px"/>
             </clipPath>
             <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
             <text x="10px" y="84px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
@@ -117,7 +117,7 @@ public class StatusNamaaTests
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
             <clipPath id="clip1">
-                <rect x="10px" y="10px" width="180px" height="108px"/>
+            <rect x="10px" y="10px" width="180px" height="108px"/>
             </clipPath>
             <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
             <g font-size="24px" font-weight="400">
@@ -164,7 +164,7 @@ public class StatusNamaaTests
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
             <clipPath id="clip1">
-                <rect x="10px" y="10px" width="180px" height="108px"/>
+            <rect x="10px" y="10px" width="180px" height="108px"/>
             </clipPath>
             <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
             <g font-size="24px" font-weight="400">

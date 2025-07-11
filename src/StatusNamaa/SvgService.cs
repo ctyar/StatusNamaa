@@ -44,13 +44,14 @@ internal sealed class SvgService
     private static void AddHeader(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
     {
         var height = 36 + 10 + ((metrics.Count + 2) * 24) + 10;
+
         svgDoc.AppendLine($"""
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="{height}px" viewBox="0 0 470 {height}">
-            <clipPath id="clip1">
-                <rect x="10px" y="10px" width="180px" height="{84 + (metrics.Count) * 24}px"/>
-            </clipPath>
-            <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
             """);
+        svgDoc.AppendLine("""<clipPath id="clip1">""");
+        svgDoc.AppendLine($"""<rect x="10px" y="10px" width="180px" height="{84 + (metrics.Count) * 24}px"/>""");
+        svgDoc.AppendLine("""</clipPath>""");
+        svgDoc.AppendLine("""<text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>""");
     }
 
     private static void AddBody(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
@@ -80,7 +81,9 @@ internal sealed class SvgService
 
     private static void AddMetricName(StringBuilder svgDoc, MetricDisplayItem metric, int rowIndex)
     {
-        svgDoc.AppendLine($"""<g clip-path="url(#clip1)"><text x="10px" y="{84 + rowIndex * 24}px" fill="#53b1fd">{Truncate(metric.Name)}</text></g>""");
+        svgDoc.AppendLine($"""
+            <g clip-path="url(#clip1)"><text x="10px" y="{84 + rowIndex * 24}px" fill="#53b1fd">{metric.Name}</text></g>
+            """);
     }
 
     private static void AddMetricBars(StringBuilder svgDoc, MetricDisplayItem metric, int rowIndex)
@@ -147,15 +150,5 @@ internal sealed class SvgService
         }
 
         return Colors.Last().Item2;
-    }
-
-    public static string Truncate(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-        {
-            return value;
-        }
-
-        return value.Length <= 16 ? value : value[..16];
     }
 }
