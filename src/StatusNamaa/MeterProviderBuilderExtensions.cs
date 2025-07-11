@@ -40,6 +40,7 @@ public static class MeterProviderBuilderExtensions
             configureOptions(options);
         });
 
+        services.AddSingleton<ICustomMetricService, CustomMetricService>();
         services.AddSingleton<MetricDisplayService>();
         services.AddSingleton<SvgService>();
         services.AddSingleton<IListenerService, ListenerService>();

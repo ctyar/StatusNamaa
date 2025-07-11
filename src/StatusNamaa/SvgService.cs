@@ -20,10 +20,12 @@ internal sealed class SvgService
     ];
 
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly ICustomMetricService _customMetricService;
 
-    public SvgService(IWebHostEnvironment webHostEnvironment)
+    public SvgService(IWebHostEnvironment webHostEnvironment, ICustomMetricService customMetricService)
     {
         _webHostEnvironment = webHostEnvironment;
+        _customMetricService = customMetricService;
     }
 
     public string GetSvg(List<MetricDisplayItem> metrics)
@@ -115,7 +117,7 @@ internal sealed class SvgService
     private void AddFooter(StringBuilder svgDoc, List<MetricDisplayItem> metrics)
     {
         var environment = _webHostEnvironment.EnvironmentName;
-        var version = MetricService.GetVersion();
+        var version = _customMetricService.GetVersion();
 
         svgDoc.AppendLine($"""
             <text x="10px" y="{84 + (metrics.Count) * 24}px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="{Colors[0].Item2}">{environment}</tspan>  Version: <tspan fill="{Colors[0].Item2}">{version}</tspan></text>

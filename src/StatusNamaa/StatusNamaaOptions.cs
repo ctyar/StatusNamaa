@@ -1,4 +1,6 @@
-﻿namespace StatusNamaa;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace StatusNamaa;
 
 /// <summary>
 /// Represents configuration options for StatusNamaa, including the metrics to be collected and reported.
@@ -19,13 +21,23 @@ public class StatusNamaaOptions
         {
             Name = "CPU",
             Type = StatusNamaaValueType.Percentage,
-            Selector = services => MetricService.GetCpuUsageAsync(),
+            Selector = async services =>
+            {
+                var customMetricService = services.GetRequiredService<ICustomMetricService>();
+
+                return await customMetricService.GetCpuUsageAsync();
+            },
         },
         new StatusNamaaMetric
         {
             Name = "Memory",
             Type = StatusNamaaValueType.Percentage,
-            Selector = services => Task.FromResult(MetricService.GetMemoryUsage()),
+            Selector = services =>
+            {
+                var customMetricService = services.GetRequiredService<ICustomMetricService>();
+
+                return Task.FromResult(customMetricService.GetMemoryUsage());
+            },
         },
         new StatusNamaaMetric
         {
