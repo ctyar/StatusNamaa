@@ -26,8 +26,12 @@ public class Program
 
         builder.Services.AddSingleton<QueueLengthMetric>();
         builder.Services.AddSingleton<ListenerService>();
-        builder.Services.AddStatusNamaa(/*o =>
+        builder.Services.AddStatusNamaa(o =>
         {
+            // Add a .NET built-in metric
+            o.AddMetric("dotnet.exceptions");
+
+            // Add a .NET built-in metric with custom display name and type
             o.Metrics.Add(new StatusNamaaMetric
             {
                 Name = "dotnet.process.memory.working_set",
@@ -35,17 +39,21 @@ public class Program
                 Type = StatusNamaaValueType.Bytes,
             });
 
-            o.AddMetric("My Custom Value", async services =>
+            // Add a custom metric
+            o.Metrics.Add(new StatusNamaaMetric
+            {
+                Name = "queue.length",
+                DisplayName = "Queue Length",
+            });
+
+            // Add a custom value
+            o.AddMetric("Custom Value", async services =>
             {
                 var listenerService = services.GetRequiredService<ListenerService>();
 
                 return await listenerService.GetValue();
             });
-
-            o.AddMetric("queue.length");
-
-            o.AddMetric("dotnet.exceptions");
-        }*/);
+        });
 
         var app = builder.Build();
 

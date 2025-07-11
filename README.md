@@ -46,7 +46,7 @@ builder.Services.AddStatusNamaa(o =>
     });
 
     // Add a custom value
-    o.AddMetric("My Custom Value", async services =>
+    o.AddMetric("Custom Value", async services =>
     {
         var listenerService = services.GetRequiredService<ListenerService>();
 
