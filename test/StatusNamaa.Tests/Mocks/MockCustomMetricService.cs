@@ -1,4 +1,4 @@
-﻿namespace StatusNamaa.Tests;
+﻿namespace StatusNamaa.Tests.Mocks;
 
 internal sealed class MockCustomMetricService : ICustomMetricService
 {
