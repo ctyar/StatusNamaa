@@ -59,6 +59,8 @@ public class StatusNamaaTests
             <text x="10px" y="180px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
+        expected = expected.Replace("\r\n", Environment.NewLine);
+
         var builder = WebApplication.CreateSlimBuilder();
         builder.WebHost.UseTestServer();
         builder.Services.AddStatusNamaa();
@@ -88,6 +90,8 @@ public class StatusNamaaTests
             <text x="10px" y="84px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
+        expected = expected.Replace("\r\n", Environment.NewLine);
+
         var builder = WebApplication.CreateSlimBuilder();
         builder.WebHost.UseTestServer();
         builder.Services.AddStatusNamaa(o =>
@@ -125,6 +129,8 @@ public class StatusNamaaTests
             <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
+        expected = expected.Replace("\r\n", Environment.NewLine);
+
         var builder = WebApplication.CreateSlimBuilder();
         builder.WebHost.UseTestServer();
         builder.Services.AddStatusNamaa(o =>
@@ -170,6 +176,8 @@ public class StatusNamaaTests
             <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
+        expected = expected.Replace("\r\n", Environment.NewLine);
+
         var builder = WebApplication.CreateSlimBuilder();
         builder.WebHost.UseTestServer();
         builder.Services.AddStatusNamaa(o =>
