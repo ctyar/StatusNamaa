@@ -10,7 +10,7 @@ namespace StatusNamaa.Tests;
 
 public class OpenTelemetryTests
 {
-    //[Fact]
+    [Fact(Skip = "For some reason the OpenTelemetry doesn't work")]
     public async Task OpenTelemetryTest()
     {
         var expected = """
