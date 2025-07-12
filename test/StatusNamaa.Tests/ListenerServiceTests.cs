@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StatusNamaa.Tests.Mocks;
 
 namespace StatusNamaa.Tests;
 
@@ -23,7 +24,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">0</text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expected = expected.Replace("\r\n", Environment.NewLine);
@@ -38,6 +39,7 @@ public class ListenerServiceTests
                 Name = "dotnet.thread_pool.queue.length",
             });
         });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
 
         var app = builder.Build();
         app.MapStatusNamaa();
@@ -65,7 +67,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end"></text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expected = expected.Replace("\r\n", Environment.NewLine);
@@ -80,7 +82,9 @@ public class ListenerServiceTests
                 Name = "CustomInstrument",
             });
         });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
         builder.Services.AddSingleton<CustomMetric<int>>();
+
         var app = builder.Build();
         app.MapStatusNamaa();
 
@@ -107,7 +111,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">1</text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expected = expected.Replace("\r\n", Environment.NewLine);
@@ -122,7 +126,9 @@ public class ListenerServiceTests
                 Name = "CustomInstrument",
             });
         });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
         builder.Services.AddSingleton<CustomMetric<int>>();
+
         var app = builder.Build();
         app.MapStatusNamaa();
 
@@ -150,7 +156,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end"></text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         var expectedSecondRequest = """
@@ -165,7 +171,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">1</text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expectedFirstRequest = expectedFirstRequest.Replace("\r\n", Environment.NewLine);
@@ -181,7 +187,9 @@ public class ListenerServiceTests
                 Name = "CustomInstrument",
             });
         });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
         builder.Services.AddSingleton<CustomMetric<int>>();
+
         var app = builder.Build();
         app.MapStatusNamaa();
 
@@ -212,7 +220,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">1</text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expected = expected.Replace("\r\n", Environment.NewLine);
@@ -228,6 +236,8 @@ public class ListenerServiceTests
             });
         });
         builder.Services.AddSingleton<CustomMetric<byte>>();
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
+
         var app = builder.Build();
         app.MapStatusNamaa();
 
@@ -257,7 +267,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">1</text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expected = expected.Replace("\r\n", Environment.NewLine);
@@ -273,6 +283,8 @@ public class ListenerServiceTests
             });
         });
         builder.Services.AddSingleton<CustomMetric<float>>();
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
+
         var app = builder.Build();
         app.MapStatusNamaa();
 
@@ -302,7 +314,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">1</text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expected = expected.Replace("\r\n", Environment.NewLine);
@@ -317,7 +329,9 @@ public class ListenerServiceTests
                 Name = "CustomInstrument",
             });
         });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
         builder.Services.AddSingleton<CustomMetric<double>>();
+
         var app = builder.Build();
         app.MapStatusNamaa();
 
@@ -347,7 +361,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">1</text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expected = expected.Replace("\r\n", Environment.NewLine);
@@ -362,7 +376,9 @@ public class ListenerServiceTests
                 Name = "CustomInstrument",
             });
         });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
         builder.Services.AddSingleton<CustomMetric<decimal>>();
+
         var app = builder.Build();
         app.MapStatusNamaa();
 
@@ -392,7 +408,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">1</text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expected = expected.Replace("\r\n", Environment.NewLine);
@@ -407,7 +423,9 @@ public class ListenerServiceTests
                 Name = "CustomInstrument",
             });
         });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
         builder.Services.AddSingleton<CustomMetric<short>>();
+
         var app = builder.Build();
         app.MapStatusNamaa();
 
@@ -437,7 +455,7 @@ public class ListenerServiceTests
             <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">1</text>
             </g>
             </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.0.0+ac88c3d70f219c9beb398a3b17874e14b79e7186</tspan></text>
+            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
             </svg>
             """;
         expected = expected.Replace("\r\n", Environment.NewLine);
@@ -452,7 +470,9 @@ public class ListenerServiceTests
                 Name = "CustomInstrument",
             });
         });
+        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
         builder.Services.AddSingleton<CustomMetric<long>>();
+
         var app = builder.Build();
         app.MapStatusNamaa();
 
