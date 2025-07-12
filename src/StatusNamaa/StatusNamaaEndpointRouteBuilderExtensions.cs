@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace StatusNamaa;
 
 /// <summary>
-/// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to register StatusNamaa endpoints.
+/// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to register StatusNamaa's endpoint.
 /// </summary>
 public static class StatusNamaaEndpointRouteBuilderExtensions
 {
