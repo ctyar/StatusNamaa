@@ -96,8 +96,8 @@ public class ListenerServiceTests
         Assert.Equal(expected, actual);
     }
 
-    [Fact(Skip = "This is failing at the moment because the ListenerService's ctor doesn't get triggered until the first request")]
-    public async Task IntEventBeforeFirstRequestTest()
+    [Fact]
+    public async Task IntEventTest()
     {
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
@@ -142,71 +142,7 @@ public class ListenerServiceTests
     }
 
     [Fact]
-    public async Task IntEventAfterFirstRequestTest()
-    {
-        var expectedFirstRequest = """
-            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
-            <clipPath id="clip1">
-            <rect x="10px" y="10px" width="180px" height="108px"/>
-            </clipPath>
-            <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
-            <g font-size="24px" font-weight="400">
-            <g>
-            <g clip-path="url(#clip1)"><text x="10px" y="84px" fill="#53b1fd">CustomInstrument</text></g>
-            <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end"></text>
-            </g>
-            </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
-            </svg>
-            """;
-        var expectedSecondRequest = """
-            <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
-            <clipPath id="clip1">
-            <rect x="10px" y="10px" width="180px" height="108px"/>
-            </clipPath>
-            <text x="10px" y="36px" fill="#bfc9d1" font-size="36px" font-weight="500">Status Namaa</text>
-            <g font-size="24px" font-weight="400">
-            <g>
-            <g clip-path="url(#clip1)"><text x="10px" y="84px" fill="#53b1fd">CustomInstrument</text></g>
-            <text x="460px" y="84px" fill="#b0fd6a" text-anchor="end">1</text>
-            </g>
-            </g>
-            <text x="10px" y="108px" fill="#53b1fd" font-size="10px">Environment: <tspan fill="#b0fd6a">Production</tspan>  Version: <tspan fill="#b0fd6a">1.2.3-alpha.6+f50922c5e0</tspan></text>
-            </svg>
-            """;
-        expectedFirstRequest = expectedFirstRequest.Replace("\r\n", Environment.NewLine);
-        expectedSecondRequest = expectedSecondRequest.Replace("\r\n", Environment.NewLine);
-
-        var builder = WebApplication.CreateSlimBuilder();
-        builder.WebHost.UseTestServer();
-        builder.Services.AddStatusNamaa(o =>
-        {
-            o.Metrics.Clear();
-            o.Metrics.Add(new StatusNamaaMetric
-            {
-                Name = "CustomInstrument",
-            });
-        });
-        builder.Services.AddSingleton<ICustomMetricService, MockCustomMetricService>();
-        builder.Services.AddSingleton<CustomMetric<int>>();
-
-        var app = builder.Build();
-        app.MapStatusNamaa();
-
-        app.Start();
-        var client = app.GetTestClient();
-
-        var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
-        Assert.Equal(expectedFirstRequest, actual);
-
-        app.Services.GetRequiredService<CustomMetric<int>>().Add(1);
-
-        actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
-        Assert.Equal(expectedSecondRequest, actual);
-    }
-
-    [Fact]
-    public async Task ByteEventAfterFirstRequestTest()
+    public async Task ByteEventTest()
     {
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
@@ -243,17 +179,15 @@ public class ListenerServiceTests
 
         app.Start();
         var client = app.GetTestClient();
-
-        await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
-
         app.Services.GetRequiredService<CustomMetric<byte>>().Add(1);
 
         var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
         Assert.Equal(expected, actual);
     }
 
     [Fact]
-    public async Task FloatEventAfterFirstRequestTest()
+    public async Task FloatEventTest()
     {
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
@@ -290,17 +224,15 @@ public class ListenerServiceTests
 
         app.Start();
         var client = app.GetTestClient();
-
-        await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
-
         app.Services.GetRequiredService<CustomMetric<float>>().Add(1);
 
         var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
         Assert.Equal(expected, actual);
     }
 
     [Fact]
-    public async Task DoubleEventAfterFirstRequestTest()
+    public async Task DoubleEventTest()
     {
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
@@ -337,17 +269,15 @@ public class ListenerServiceTests
 
         app.Start();
         var client = app.GetTestClient();
-
-        await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
-
         app.Services.GetRequiredService<CustomMetric<double>>().Add(1);
 
         var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
         Assert.Equal(expected, actual);
     }
 
     [Fact]
-    public async Task DecimalEventAfterFirstRequestTest()
+    public async Task DecimalEventTest()
     {
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
@@ -384,17 +314,15 @@ public class ListenerServiceTests
 
         app.Start();
         var client = app.GetTestClient();
-
-        await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
-
         app.Services.GetRequiredService<CustomMetric<decimal>>().Add(1);
 
         var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
         Assert.Equal(expected, actual);
     }
 
     [Fact]
-    public async Task ShortEventAfterFirstRequestTest()
+    public async Task ShortEventTest()
     {
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
@@ -431,17 +359,15 @@ public class ListenerServiceTests
 
         app.Start();
         var client = app.GetTestClient();
-
-        await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
-
         app.Services.GetRequiredService<CustomMetric<short>>().Add(1);
 
         var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
         Assert.Equal(expected, actual);
     }
 
     [Fact]
-    public async Task LongEventAfterFirstRequestTest()
+    public async Task LongEventTest()
     {
         var expected = """
             <svg xmlns="http://www.w3.org/2000/svg" style="background:#20242c;font-family:'Segoe UI',sans-serif;" width="470px" height="128px" viewBox="0 0 470 128">
@@ -478,12 +404,10 @@ public class ListenerServiceTests
 
         app.Start();
         var client = app.GetTestClient();
-
-        await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
-
         app.Services.GetRequiredService<CustomMetric<long>>().Add(1);
 
         var actual = await client.GetStringAsync("/statusnamaa.svg", TestContext.Current.CancellationToken);
+
         Assert.Equal(expected, actual);
     }
 

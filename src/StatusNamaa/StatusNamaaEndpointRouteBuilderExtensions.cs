@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace StatusNamaa;
 
@@ -21,6 +22,9 @@ public static class StatusNamaaEndpointRouteBuilderExtensions
         var endpoint = routeBuilder.MapGet("statusnamaa.svg",
             async ([FromServices] SvgService svgService, [FromServices] MetricDisplayService metricDisplayService) =>
                 Results.Content(await Endpoints.GetSvgAsync(svgService, metricDisplayService), "image/svg+xml"));
+
+        // Just to trigger the ListenerService's ctor
+        routeBuilder.ServiceProvider.GetRequiredService<IListenerService>();
 
         endpoint.ExcludeFromDescription();
 
