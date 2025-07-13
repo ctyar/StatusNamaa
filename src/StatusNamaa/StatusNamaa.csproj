@@ -13,6 +13,7 @@
     <PackageProjectUrl>https://github.com/ctyar/StatusNamaa</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ctyar/StatusNamaa</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
