@@ -64,6 +64,15 @@ app.MapStatusNamaa()
 ### Metrics
 
 ### Caching
+You can cache the status page to reduce load on your application by adding `CacheOutput()` to the result of `MapStatusNamaa()`:
+```csharp
+app.MapStatusNamaa()
+    .CacheOutput(options =>
+    {
+        options.Expire(TimeSpan.FromSeconds(10));
+    });
+```
+More information about caching can be found in the [Output caching](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/output) docs.
 
 ## Pre-release builds
 
