@@ -26,3 +26,7 @@ StatusNamaa.StatusNamaaValueType
 StatusNamaa.StatusNamaaValueType.Bytes = 2 -> StatusNamaa.StatusNamaaValueType
 StatusNamaa.StatusNamaaValueType.Default = 0 -> StatusNamaa.StatusNamaaValueType
 StatusNamaa.StatusNamaaValueType.Percentage = 1 -> StatusNamaa.StatusNamaaValueType
+StatusNamaa.StatusNamaaMetric.Selector.get -> System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double?>!>?
+StatusNamaa.StatusNamaaOptions.AddMetric(string! name, string! displayName, System.Func<double?, string?>! formatter, System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double?>!>! selector) -> void
+StatusNamaa.StatusNamaaOptions.AddMetric(string! name, System.Func<double?, string?>! formatter, System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double?>!>! selector) -> void
+StatusNamaa.StatusNamaaOptions.AddMetric(string! name, System.Func<System.IServiceProvider!, System.Threading.Tasks.Task<double?>!>! selector) -> void
